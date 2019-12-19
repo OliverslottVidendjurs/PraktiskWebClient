@@ -11,9 +11,9 @@ const Container = styled.div`
 const OverviewPage = () => {
     return (
         <Container>
-            <AddPost/>
-            <Posts/>
-            <Friends/>
+            <AddPost />
+            <Friends />
+            <Posts />
         </Container>
     )
 }
