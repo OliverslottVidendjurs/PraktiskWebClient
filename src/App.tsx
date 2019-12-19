@@ -22,7 +22,7 @@ const App: React.FC = () => {
 	return (
 		<ApolloProvider client={client}>
 			<AppContainer className="App">
-				<BrowserRouter>
+				<BrowserRouter basename="/praktisk">
 					<Header />
 					<Route exact path="/" component={LoginPage} />
 					<Route path="/login" component={LoginPage} />
