@@ -22,3 +22,13 @@ export const DELETEPOST = gql`
         deletePost(id: $id)
     }
 `;
+
+export const GETFRIENDS = gql`
+    query friends {
+        friends {
+            id
+            firstname
+            lastname
+        }
+    }
+`;

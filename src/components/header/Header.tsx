@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, Redirect } from "react-router-dom";
+import { Link, Redirect, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { gql } from "apollo-boost";
 import { useMutation } from "@apollo/react-hooks";
@@ -46,9 +46,10 @@ const LOGOUT = gql`
 `;
 
 const Header = (props: any) => {
-    console.log(props);
     const [logout, { client }] = useMutation(LOGOUT);
     const [loggedOut, setLoggedout] = useState<boolean>(false);
+    let location = useLocation(); 
+    if(location.pathname === "/login") return null;
     const clicklogout = () => {
         logout().then(() => {
             client?.clearStore();

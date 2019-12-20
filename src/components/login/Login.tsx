@@ -5,7 +5,6 @@ import { Group, Button } from "../../styles/styles";
 import { Redirect, Link } from "react-router-dom";
 
 const Login = () => {
-
     const [username, setUsername] = useState<string>();
     const [password, setPassword] = useState<string>();
     const [loggedIn, setLoggedIn] = useState<boolean>(false);
@@ -18,14 +17,7 @@ const Login = () => {
         }
     `;
 
-    // const LOGOUT = gql`
-    //     mutation Logout{
-    //         logout
-    //     }
-    // `;
-
     const [login, { client }] = useMutation(LOGIN);
-    // const [logout] = useMutation(LOGOUT);
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
@@ -36,7 +28,6 @@ const Login = () => {
                     password
                 }
             }).then(res => {
-                console.log(res.data.login.email);
                 client?.clearStore();
                 setLoggedIn(true);
             }).catch(err => {
@@ -46,15 +37,6 @@ const Login = () => {
             alert("Felterne skal udfyldes!");
         }
     }
-
-    // const handleLogout = () => {
-    //     logout().then(res => {
-    //         client?.clearStore();
-    //         alert("Logged out!");
-    //     }).catch(error => {
-    //         alert(error);
-    //     });
-    // }
 
     return (
         <div>
@@ -72,7 +54,6 @@ const Login = () => {
                 <Button>Login</Button>
             </form>
             <Link to="/register">Opret ny bruger</Link>
-            {/* <Button type="button" onClick={handleLogout}>Logout</Button> */}
         </div>
     )
 }
