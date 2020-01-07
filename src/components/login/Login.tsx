@@ -1,18 +1,23 @@
-import React, { useState, FormEvent } from "react";
+import React, { useState, FormEvent, useContext } from "react";
 import { gql } from "apollo-boost";
 import { useMutation } from "@apollo/react-hooks";
 import { Group, Button } from "../../styles/styles";
 import { Redirect, Link } from "react-router-dom";
+import { IContextType, AuthContext } from "../contexts/AuthContext";
 
 const Login = () => {
     const [username, setUsername] = useState<string>();
     const [password, setPassword] = useState<string>();
     const [loggedIn, setLoggedIn] = useState<boolean>(false);
+    const authContext = useContext<IContextType>(AuthContext);
 
     const LOGIN = gql`
         mutation Login($username: String, $password: String){
             login(username: $username, password: $password){
-                email
+                email,
+                id,
+                firstname,
+                lastname
             }
         }
     `;
@@ -30,6 +35,7 @@ const Login = () => {
             }).then(res => {
                 client?.clearStore();
                 setLoggedIn(true);
+                authContext.Action({type: "login2"});
             }).catch(err => {
                 alert(err);
             });

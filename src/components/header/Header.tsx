@@ -1,8 +1,7 @@
-import React, { useState } from "react";
-import { Link, Redirect, useLocation } from "react-router-dom";
+import React, { useContext } from "react";
+import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
-import { gql } from "apollo-boost";
-import { useMutation } from "@apollo/react-hooks";
+import { AuthContext, IContextType } from "../contexts/AuthContext";
 
 const List = styled.ul`
     list-style: none;
@@ -39,28 +38,27 @@ const LogoutButton = styled.button`
     cursor: pointer;
 `;
 
-const LOGOUT = gql`
-    mutation Logout{
-        logout
+const FlexWrapper = styled.div`
+    display: flex;
+    justify-content: space-between;
+    a {
+        line-height: 60px;
+        margin-right: 30px;
+        text-decoration: none;
+        color: black;
+        font-size: 20px;
     }
 `;
 
-const Header = (props: any) => {
-    const [logout, { client }] = useMutation(LOGOUT);
-    const [loggedOut, setLoggedout] = useState<boolean>(false);
-    let location = useLocation(); 
-    if(location.pathname === "/login") return null;
+const Header = () => {
+    const authContext = useContext<IContextType>(AuthContext);
+    let location = useLocation();
+    if (location.pathname === "/login") return null;
     const clicklogout = () => {
-        logout().then(() => {
-            client?.clearStore();
-            setLoggedout(true);
-        }).catch(error => {
-            alert(error);
-        });
+        authContext.logout();
     }
     return (
         <HeaderContainer>
-            {loggedOut ? <Redirect to="/login" /> : null}
             <nav>
                 <List>
                     <li>
@@ -74,7 +72,12 @@ const Header = (props: any) => {
                     </li>
                 </List>
             </nav>
-            <LogoutButton onClick={clicklogout}>Log ud</LogoutButton>
+            <FlexWrapper>
+                <Link to={`/profil/${authContext.State.id}`}>
+                    {authContext.State.name}
+                </Link>
+                <LogoutButton onClick={clicklogout}>Log ud</LogoutButton>
+            </FlexWrapper>
         </HeaderContainer>
     )
 }
