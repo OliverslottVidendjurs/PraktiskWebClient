@@ -1,44 +1,17 @@
 import React, { useState, FormEvent, useContext } from "react";
-import { gql } from "apollo-boost";
-import { useMutation } from "@apollo/react-hooks";
 import { Group, Button } from "../../styles/styles";
-import { Redirect, Link } from "react-router-dom";
-import { IContextType, AuthContext } from "../contexts/AuthContext";
+import { Link } from "react-router-dom";
+import { AuthContext } from "../contexts/AuthContext";
 
 const Login = () => {
     const [username, setUsername] = useState<string>();
     const [password, setPassword] = useState<string>();
-    const [loggedIn, setLoggedIn] = useState<boolean>(false);
-    const authContext = useContext<IContextType>(AuthContext);
-
-    const LOGIN = gql`
-        mutation Login($username: String, $password: String){
-            login(username: $username, password: $password){
-                email,
-                id,
-                firstname,
-                lastname
-            }
-        }
-    `;
-
-    const [login, { client }] = useMutation(LOGIN);
+    const authContext = useContext(AuthContext);
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
         if (username && password) {
-            login({
-                variables: {
-                    username,
-                    password
-                }
-            }).then(res => {
-                client?.clearStore();
-                setLoggedIn(true);
-                authContext.Action({type: "login2"});
-            }).catch(err => {
-                alert(err);
-            });
+            authContext.login(username, password);
         } else {
             alert("Felterne skal udfyldes!");
         }
@@ -46,7 +19,6 @@ const Login = () => {
 
     return (
         <div>
-            {loggedIn ? <Redirect to="/oversigt"/> : null}
             <h2>Login</h2>
             <form onSubmit={handleSubmit}>
                 <Group>

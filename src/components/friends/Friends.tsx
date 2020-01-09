@@ -14,6 +14,10 @@ const HeaderTitle = styled.h3`
     margin-bottom: 10px;
 `;
 
+const FriendsWrapper = styled.ul`
+    list-style: none;
+`;
+
 const Friends = () => {
     const { data, loading } = useQuery(GETFRIENDS);
     
@@ -33,9 +37,9 @@ const Friends = () => {
         <Container>
             <HeaderTitle>Venner</HeaderTitle>
             <Searchbar/>
-            <ul>
+            <FriendsWrapper>
                 {FriendList}
-            </ul>
+            </FriendsWrapper>
         </Container>
     );
 }

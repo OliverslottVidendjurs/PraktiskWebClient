@@ -11,9 +11,15 @@ const FriendContainer = styled.li`
     margin-bottom: 10px;
 `;
 
+const RemoveFriendButton = styled.button`
+    cursor: pointer;
+    padding: 3px;
+    margin-left: 5px;
+`;
+
 interface PropType {
     friend: userType
-} 
+}
 
 
 const REMOVEFRIEND = gql`
@@ -22,15 +28,17 @@ const REMOVEFRIEND = gql`
     }
 `;
 
-const Friend = ({friend}: PropType) => {
+const Friend = ({ friend }: PropType) => {
     const [removeFriendMutation] = useMutation(REMOVEFRIEND);
     const removeFriend = (id: number) => {
-        removeFriendMutation({
-            variables: {
-                id
-            },
-            refetchQueries: [{ query: GETFRIENDS }, { query: GETPOSTS }]
-        })
+        if (window.confirm(`Er du sikker på at du ville fjerne ${friend.firstname} ${friend.lastname} som din ven?`)) {
+            removeFriendMutation({
+                variables: {
+                    id
+                },
+                refetchQueries: [{ query: GETFRIENDS }, { query: GETPOSTS }]
+            })
+        }
     }
     return (
         <FriendContainer>
@@ -38,7 +46,7 @@ const Friend = ({friend}: PropType) => {
                 <Link to={`/profil/${friend.id}`}>
                     {friend.firstname} {friend.lastname}
                 </Link>
-                <button onClick={() => removeFriend(friend.id)}>Fjern ven</button>
+                <RemoveFriendButton onClick={() => removeFriend(friend.id)}>Fjern ven</RemoveFriendButton>
             </div>
         </FriendContainer>
     )

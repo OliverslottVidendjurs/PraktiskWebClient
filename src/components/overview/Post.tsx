@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { postType } from "../../types/post";
 import styled from "styled-components";
 import { useMutation } from "@apollo/react-hooks";
 import { DELETEPOST, GETPOSTS } from "../../schema/schema";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../contexts/AuthContext";
 
 interface propType {
     post: postType
@@ -44,6 +45,7 @@ const Header = styled.div`
 
 const Post = ({ post }: propType) => {
     const [deletePost] = useMutation(DELETEPOST);
+    const authContext = useContext(AuthContext);
     const handleDeleteClick = () => {
         deletePost({
             variables: {
@@ -54,6 +56,15 @@ const Post = ({ post }: propType) => {
             }]
         });
     }
+
+    const DeleteButtonConditional = () => {
+        if (post.user_id === authContext.State.id)
+            return (
+                <DeleteButton onClick={handleDeleteClick}>X</DeleteButton>
+            );
+        return null;
+    }
+
     return (
         <PostWrapper>
             <ContentWrapper>
@@ -63,7 +74,7 @@ const Post = ({ post }: propType) => {
                 </Header>
                 <p>{post.content}</p>
             </ContentWrapper>
-            <DeleteButton onClick={handleDeleteClick}>X</DeleteButton>
+            {DeleteButtonConditional()}
         </PostWrapper>
     )
 }

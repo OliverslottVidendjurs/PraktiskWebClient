@@ -74,7 +74,7 @@ const Header = () => {
             </nav>
             <FlexWrapper>
                 <Link to={`/profil/${authContext.State.id}`}>
-                    {authContext.State.name}
+                    {`${authContext.State.firstname} ${authContext.State.lastname}`}
                 </Link>
                 <LogoutButton onClick={clicklogout}>Log ud</LogoutButton>
             </FlexWrapper>

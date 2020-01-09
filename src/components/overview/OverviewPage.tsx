@@ -1,8 +1,8 @@
 import React from "react";
-import Posts from "./Posts";
 import AddPost from "./AddPost";
 import styled from "styled-components";
 import Friends from "../friends/Friends";
+import AllPosts from "./AllPosts";
 
 const Container = styled.div`
     margin-top: 20px;
@@ -13,7 +13,7 @@ const OverviewPage = () => {
         <Container>
             <AddPost />
             <Friends />
-            <Posts />
+            <AllPosts />
         </Container>
     )
 }

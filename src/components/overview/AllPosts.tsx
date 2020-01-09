@@ -2,26 +2,21 @@ import React from "react";
 import { useQuery } from "@apollo/react-hooks";
 import Post from "./Post";
 import { postType } from "../../types/post";
-import { GETPOSTSBYID } from "../../schema/schema";
+import { GETPOSTS } from "../../schema/schema";
 
 interface PostsData {
-    postsById: postType[]
+    posts: postType[]
 }
 
-interface PropsType {
-    id: number
-}
-
-const Posts = ({id}: PropsType) => {
-    const { data, loading } = useQuery<PostsData>(GETPOSTSBYID, {variables: {
-        id
-    }});
+const AllPosts = () => {
+    const { data, loading } = useQuery<PostsData>(GETPOSTS);
     if (loading) {
         return (
             <div>Henter opslag...</div>
         )
     } else {
-        const PostList = data?.postsById?.slice().reverse().map(post => {
+        console.log(data);
+        const PostList = data?.posts?.slice().reverse().map(post => {
             return (
                 <Post key={post.id} post={post} />
             )
@@ -34,4 +29,4 @@ const Posts = ({id}: PropsType) => {
     }
 }
 
-export default Posts;
+export default AllPosts;

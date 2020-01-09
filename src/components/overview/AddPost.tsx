@@ -9,6 +9,7 @@ const TextArea = styled.textarea`
     font-size: 24px;
     padding: 10px;
     margin-bottom: 5px;
+    resize: none;
 `;
 
 const Button = styled.button`

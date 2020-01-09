@@ -8,6 +8,8 @@ import OverviewPage from './components/overview/OverviewPage';
 import styled from 'styled-components';
 import Header from './components/header/Header';
 import { AuthContextProvider } from './components/contexts/AuthContext';
+import Profile from './components/profile/Profile';
+import "../node_modules/@fortawesome/fontawesome-free/css/all.css";
 
 const client = new ApolloClient({
 	uri: "http://localhost:4000/graphql",
@@ -30,6 +32,7 @@ const App: React.FC = () => {
 						<Route path="/login" component={LoginPage} />
 						<Route path="/register" component={Register} />
 						<Route path="/oversigt" component={OverviewPage}></Route>
+						<Route path="/profil/:id" component={Profile}></Route>
 					</AuthContextProvider>
 				</BrowserRouter>
 			</AppContainer>

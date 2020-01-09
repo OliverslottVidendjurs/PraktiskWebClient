@@ -17,6 +17,45 @@ export const GETPOSTS = gql`
     }
 `;
 
+export const USER = gql`
+	query user{
+		user{
+			id,
+			firstname,
+			lastname,
+            email
+		}
+	}
+`;
+
+export const USERBYID = gql`
+	query userById($id: Int){
+		userById(id: $id){
+			id,
+			firstname,
+			lastname,
+            email
+		}
+	}
+`;
+
+export const GETPOSTSBYID = gql`
+    query postsById($id: Int) {
+        postsById(id: $id) {
+            id
+            user_id
+            content
+            img
+            date
+            user {
+                id
+                firstname
+                lastname
+            }
+        }
+    }
+`;
+
 export const DELETEPOST = gql`
     mutation deletePost($id: Int) {
         deletePost(id: $id)
