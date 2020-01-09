@@ -15,7 +15,6 @@ const AllPosts = () => {
             <div>Henter opslag...</div>
         )
     } else {
-        console.log(data);
         const PostList = data?.posts?.slice().reverse().map(post => {
             return (
                 <Post key={post.id} post={post} />

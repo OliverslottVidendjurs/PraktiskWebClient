@@ -1,15 +1,18 @@
-import React, { FormEvent, useState, KeyboardEvent } from "react";
+import React, { FormEvent, useState, KeyboardEvent, useContext } from "react";
 import styled from "styled-components";
 import { gql } from "apollo-boost";
 import { useMutation } from "@apollo/react-hooks";
-import { GETPOSTS } from "../../schema/schema";
+import { GETPOSTS, GETPOSTSBYID } from "../../schema/schema";
+import { AuthContext } from "../contexts/AuthContext";
 
 const TextArea = styled.textarea`
     width: 100%;
     font-size: 24px;
     padding: 10px;
     margin-bottom: 5px;
-    resize: none;
+    resize: none;    
+    border: 1px solid #00000066;
+    border-radius: 6px;
 `;
 
 const Button = styled.button`
@@ -20,7 +23,6 @@ const Button = styled.button`
     border: none;
     background-color: #2c3fc7;
     color: white;
-    border-radius: 6px;
     transition: 0.2s;
     &:hover {
         background-color: blue;
@@ -30,6 +32,7 @@ const Button = styled.button`
 const FlexContainer = styled.div`
     display: flex;
     justify-content: flex-end;
+    margin-bottom: 30px;
 `;
 
 const ADDPOST = gql`
@@ -43,8 +46,19 @@ const ADDPOST = gql`
 const AddPost = () => {
     const [message, setMessage] = useState<string>("");
     const [addpost] = useMutation(ADDPOST);
+    const authContext = useContext(AuthContext);
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
+        createPost();
+    }
+
+    const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+        if (e.key === "Enter") {
+            createPost();
+        }
+    }
+
+    const createPost = () => {
         if (message === "") {
             alert("Feltet kan ikke være tomt!");
         } else {
@@ -55,28 +69,14 @@ const AddPost = () => {
                 },
                 refetchQueries: [{
                     query: GETPOSTS
+                }, {
+                    query: GETPOSTSBYID,
+                    variables: {
+                        id: authContext.State.id
+                    }
                 }]
             });
             setMessage("");
-        }
-    }
-
-    const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
-        if (e.key === "Enter") {
-            if (message === "") {
-                alert("Feltet kan ikke være tomt!");
-            } else {
-                addpost({
-                    variables: {
-                        content: message,
-                        img: ""
-                    },
-                    refetchQueries: [{
-                        query: GETPOSTS
-                    }]
-                });
-                setMessage("");
-            }
         }
     }
 

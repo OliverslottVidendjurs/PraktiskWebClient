@@ -19,16 +19,34 @@ const GETALLUSERS = gql`
 
 const SearchBar = styled.form`
     position: relative;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 `;
 
 const Input = styled.input`
-    padding: 3px;
+    padding: 5px;
+    border: 1px solid #00000066;
+    border-radius: 0;
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+    font-size: 18px;
+    &:focus {
+        outline: none;
+    }
 `;
 
 const AddButton = styled.button`
-    padding: 3px;
+    padding: 5px;
     cursor: pointer;
+    background-color: #2c3fc7;
+    color: white;
+    border: none;
+    border-right: 1px solid #00000066;
+    border-top: 1px solid #00000066;
+    border-bottom: 1px solid #00000066;
+    border-radius: 0;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+    font-size: 18px;
 `;
 
 const Dropdown = styled.div`
@@ -79,16 +97,6 @@ const Searchbar = () => {
         dropdownElm.current!.style.left = inputXPos + "px";
         dropdownElm.current!.style.width = inputElm.current!.getBoundingClientRect().width + "px";
     }, []);
-
-    // const handleInputChange = (e: FormEvent) => {
-    //     const elm = (e.target as HTMLInputElement);
-    //     setFriendName(elm.value);
-    //     if (elm.value === "") {
-    //         dropdownElm.current!.style.display = "none";
-    //     } else {
-    //         dropdownElm.current!.style.display = "block";
-    //     }
-    // }
 
     useEffect(() => {
         if (friendName === "") {

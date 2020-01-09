@@ -28,6 +28,12 @@ const REMOVEFRIEND = gql`
     }
 `;
 
+const FriendName = styled.span`
+    a {
+        text-decoration: none;
+    }
+`;
+
 const Friend = ({ friend }: PropType) => {
     const [removeFriendMutation] = useMutation(REMOVEFRIEND);
     const removeFriend = (id: number) => {
@@ -43,9 +49,11 @@ const Friend = ({ friend }: PropType) => {
     return (
         <FriendContainer>
             <div>
-                <Link to={`/profil/${friend.id}`}>
-                    {friend.firstname} {friend.lastname}
-                </Link>
+                <FriendName>
+                    <Link to={`/profil/${friend.id}`}>
+                        {friend.firstname} {friend.lastname}
+                    </Link>
+                </FriendName>
                 <RemoveFriendButton onClick={() => removeFriend(friend.id)}>Fjern ven</RemoveFriendButton>
             </div>
         </FriendContainer>

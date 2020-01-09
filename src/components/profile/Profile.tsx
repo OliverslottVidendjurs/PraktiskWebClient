@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react'
+import React, { useContext, useState, useEffect, FormEvent } from 'react'
 import { AuthContext, IContextType } from '../contexts/AuthContext'
 import styled from 'styled-components';
 import { gql } from 'apollo-boost';
@@ -6,6 +6,7 @@ import { useMutation, useQuery } from '@apollo/react-hooks';
 import Posts from '../overview/Posts';
 import { useParams } from 'react-router-dom';
 import { USERBYID } from '../../schema/schema';
+import { countryList } from '../../other/other';
 
 const EditButton = styled.button`
     cursor: pointer;
@@ -15,6 +16,12 @@ const EditButton = styled.button`
     &:focus {
         outline: none;
     }
+`;
+
+const Dropdown = styled.select`
+    padding: 3px;
+    font-size: 20px;
+    max-width: 250px;
 `;
 
 const Input = styled.input`
@@ -58,11 +65,19 @@ interface InputFieldType {
     submit: () => void
 }
 
+interface DropdownType {
+    id: string,
+    list: string[],
+    defaultValue: string,
+    submit: (e: FormEvent) => void
+}
+
 interface User {
     id: number,
     firstname: string,
     lastname: string,
-    email: string
+    email: string,
+    country: string
 }
 
 interface PostData {
@@ -104,6 +119,24 @@ const Profile = () => {
         });
     }
 
+    const handleCountrySubmit = (e: FormEvent) => {
+        const dropdownElm = (e.target as HTMLSelectElement);
+        editUser({
+            variables: {
+                id: parseInt(id!),
+                country: dropdownElm.value
+            },
+            refetchQueries: [{
+                query: USERBYID,
+                variables: {
+                    id: parseInt(id!)
+                }
+            }]
+        }).then(() => {
+            authContext.reload();
+        });
+    }
+
     const handleEmailSubmit = () => {
         editUser({
             variables: {
@@ -115,7 +148,7 @@ const Profile = () => {
         });
     }
 
-    const thingy: InputFieldType[] = [{
+    const inputFields: InputFieldType[] = [{
         id: "name",
         value: `${data?.userById.firstname} ${data?.userById.lastname}`,
         type: "text",
@@ -125,11 +158,13 @@ const Profile = () => {
         value: data !== undefined ? data.userById.email : "",
         type: "email",
         submit: handleEmailSubmit
-    }, {
-        id: "adresse",
-        value: "Århus",
-        type: "text",
-        submit: () => { }
+    }];
+
+    const dropDowns: DropdownType[] = [{
+        id: "country",
+        list: countryList,
+        defaultValue: `${data?.userById.country}`,
+        submit: handleCountrySubmit,
     }];
 
     useEffect(() => {
@@ -165,9 +200,9 @@ const Profile = () => {
     }, [editing, currentInputId]);
 
     const handleClick = (id: string, defaultValue: string) => {
-        if(!isOwner)
+        if (!isOwner)
             return;
-        
+
         setEditing(true);
         setCurrentInputId(id);
         setNewText(defaultValue);
@@ -188,7 +223,7 @@ const Profile = () => {
         return null;
     }
 
-    const InputFields = thingy.map((elm: InputFieldType) => {
+    const InputFields = inputFields.map((elm: InputFieldType) => {
         if (editing && currentInputId === elm.id) {
             return (
                 <InputWrapper key={elm.id}>
@@ -207,6 +242,25 @@ const Profile = () => {
         }
     });
 
+    const Dropdowns = dropDowns.map((dropdown: DropdownType) => {
+        if (!isOwner) {
+            return (
+                <span key={dropdown.id}>{dropdown.defaultValue}</span>
+            );
+        }
+
+        const List = dropdown.list.map(elm => {
+            return (
+                <option key={elm} value={elm}>{elm}</option>
+            )
+        });
+        return (
+            <Dropdown key={dropdown.id} value={dropdown.defaultValue} onChange={dropdown.submit}>
+                {List}
+            </Dropdown>
+        )
+    });
+
 
     if (loading) {
         return (
@@ -218,6 +272,7 @@ const Profile = () => {
         <ComponentWrapper>
             <LeftWrapper>
                 {InputFields}
+                {Dropdowns}
             </LeftWrapper>
             <RightWrapper>
                 <Posts id={data?.userById.id!} />

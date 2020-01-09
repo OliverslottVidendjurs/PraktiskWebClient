@@ -29,10 +29,10 @@ const ContentWrapper = styled.div`
 const PostWrapper = styled.li`
     display: flex;
     justify-content: space-between;
-    max-width: 500px;
-    border: 3px solid #0000001a;
+    /* max-width: 500px; */
+    border: 1px solid #00000066;
     margin-bottom: 25px;
-    padding: 15px;
+    padding: 18px;
     border-radius: 6px;
 `;
 
@@ -41,6 +41,23 @@ const Header = styled.div`
     justify-content: space-between;
     width: 100%;
     margin-bottom: 20px;
+`;
+
+const PosterName = styled.p`
+    font-size: 22px;
+    a {
+        text-decoration: none;
+        color: black;
+    }
+`;
+
+const TimeStamp = styled.p`
+    color: #000000a8;
+`;
+
+const Content = styled.p`
+    line-height: 1.5;
+    font-size: 20px;
 `;
 
 const Post = ({ post }: propType) => {
@@ -69,10 +86,10 @@ const Post = ({ post }: propType) => {
         <PostWrapper>
             <ContentWrapper>
                 <Header>
-                    <p><Link to={`/profil/${post.user.id}`}>{post.user.firstname} {post.user.lastname}</Link></p>
-                    <p>{new Date(parseInt(post.date)).toLocaleString()}</p>
+                    <PosterName><Link to={`/profil/${post.user.id}`}>{post.user.firstname} {post.user.lastname}</Link></PosterName>
+                    <TimeStamp>{new Date(parseInt(post.date)).toLocaleString()}</TimeStamp>
                 </Header>
-                <p>{post.content}</p>
+                <Content>{post.content}</Content>
             </ContentWrapper>
             {DeleteButtonConditional()}
         </PostWrapper>

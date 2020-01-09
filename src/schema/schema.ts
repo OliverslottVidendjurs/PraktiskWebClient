@@ -34,7 +34,8 @@ export const USERBYID = gql`
 			id,
 			firstname,
 			lastname,
-            email
+            email,
+            country
 		}
 	}
 `;

@@ -118,7 +118,7 @@ const AuthContextProvider = (props: any) => {
 
     useEffect(() => {
         //Only check authentication when not on the login page
-        if (location.pathname !== "/login") {
+        if (location.pathname !== "/login" && location.pathname !== "/register") {
             loadUser();
         }
     }, [location.pathname, loadUser]);

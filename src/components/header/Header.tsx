@@ -26,6 +26,7 @@ const List = styled.ul`
 const HeaderContainer = styled.header`
     display: flex;
     justify-content: space-between;
+    margin-bottom: 15px;
 `;
 
 const LogoutButton = styled.button`    
@@ -63,12 +64,6 @@ const Header = () => {
                 <List>
                     <li>
                         <Link to="/oversigt">Oversigt</Link>
-                    </li>
-                    <li>
-                        <Link to="/profil">Profil</Link>
-                    </li>
-                    <li>
-
                     </li>
                 </List>
             </nav>
