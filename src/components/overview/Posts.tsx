@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useQuery } from "@apollo/react-hooks";
 import Post from "./Post";
 import { postType } from "../../types/post";
@@ -21,7 +21,7 @@ const Posts = ({id}: PropsType) => {
             <div>Henter opslag...</div>
         )
     } else {
-        const PostList = data?.postsById?.slice().reverse().map(post => {
+        const PostList = data?.postsById?.slice().sort((a, b) => { return parseInt(b.date) - parseInt(a.date)}).map(post => {
             return (
                 <Post key={post.id} post={post} />
             )

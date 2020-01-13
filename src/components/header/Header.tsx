@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { AuthContext, IContextType } from "../contexts/AuthContext";
 
@@ -53,8 +53,6 @@ const FlexWrapper = styled.div`
 
 const Header = () => {
     const authContext = useContext<IContextType>(AuthContext);
-    let location = useLocation();
-    if (location.pathname === "/login") return null;
     const clicklogout = () => {
         authContext.logout();
     }

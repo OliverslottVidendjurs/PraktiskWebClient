@@ -14,15 +14,13 @@ type State = {
     id: number,
     firstname: string,
     lastname: string,
-    authenticated: boolean | null,
     email: string
 }
 const initialState: State = {
     id: 0,
     firstname: "",
     lastname: "",
-    email: "",
-    authenticated: null
+    email: ""
 }
 
 const LOGOUT = gql`
@@ -47,7 +45,8 @@ export type IContextType = {
     Action: React.Dispatch<Action>,
     logout: () => void,
     login: (username: string, password: string) => void,
-    reload: () => void
+    reload: () => void,
+    authenticated: boolean | null
 }
 
 
@@ -57,7 +56,8 @@ const AuthContext = createContext<IContextType>({
     Action: () => { },
     logout: () => { },
     login: () => { },
-    reload: () => { }
+    reload: () => { },
+    authenticated: null
 });
 
 
@@ -69,11 +69,9 @@ const reducer = (state: State, action: Action): State => {
                 firstname: action.data.firstname,
                 lastname: action.data.lastname,
                 id: action.data.id,
-                authenticated: action.data.authenticated,
                 email: action.data.email
             };
         case "logout":
-            console.log("logout");
             return initialState;
         default:
             return state;
@@ -87,6 +85,7 @@ const AuthContextProvider = (props: any) => {
     const [loggedIn, setLoggedIn] = useState<boolean>(false);
     const [auth, dispatch] = useReducer(reducer, initialState);
     const [loadUser, { called, loading, data, error, refetch }] = useLazyQuery(USER);
+    const [authenticated, setAuthenticated] = useState<boolean | null>(null);
     let location = useLocation();
 
     const loginCallback = (username: string, password: string) => {
@@ -96,6 +95,7 @@ const AuthContextProvider = (props: any) => {
                 password
             }
         }).then(res => {
+            client?.resetStore();
             setLoggedIn(true);
         }).catch(err => {
             alert(err);
@@ -110,6 +110,7 @@ const AuthContextProvider = (props: any) => {
         logout().then(() => {
             client?.clearStore();
             setRedirect(true);
+            setAuthenticated(null);
             dispatch({ type: "logout" });
         }).catch(error => {
             alert(error);
@@ -132,10 +133,12 @@ const AuthContextProvider = (props: any) => {
         if (called && !loading) {
             if (error) {
                 //User is not logged in, send them back to login site
-                setRedirect(true);
+                setRedirect(true);                
+                setAuthenticated(false);
             }
 
             if (data) {
+                setAuthenticated(true);
                 dispatch(
                     {
                         type: "login",
@@ -143,7 +146,6 @@ const AuthContextProvider = (props: any) => {
                             id: data.user.id,
                             firstname: data.user.firstname,
                             lastname: data.user.lastname,
-                            authenticated: true,
                             email: data.user.email
                         }
                     });
@@ -157,7 +159,8 @@ const AuthContextProvider = (props: any) => {
             Action: dispatch,
             logout: logoutCallback,
             login: loginCallback,
-            reload: reload
+            reload: reload,
+            authenticated
         }}>
             {redirect ? <Redirect to="/login" /> : null}
             {loggedIn ? <Redirect to="/oversigt" /> : null}

@@ -60,6 +60,10 @@ const Content = styled.p`
     font-size: 20px;
 `;
 
+const Img = styled.img`
+    width: 100%;
+`;
+
 const Post = ({ post }: propType) => {
     const [deletePost] = useMutation(DELETEPOST);
     const authContext = useContext(AuthContext);
@@ -82,6 +86,15 @@ const Post = ({ post }: propType) => {
         return null;
     }
 
+    const ImageConditional = () => {
+        if (!post.img)
+            return null;
+
+        return (
+            <Img src={`/images/${post.img}`} alt="img" />
+        )
+    }
+
     return (
         <PostWrapper>
             <ContentWrapper>
@@ -89,6 +102,7 @@ const Post = ({ post }: propType) => {
                     <PosterName><Link to={`/profil/${post.user.id}`}>{post.user.firstname} {post.user.lastname}</Link></PosterName>
                     <TimeStamp>{new Date(parseInt(post.date)).toLocaleString()}</TimeStamp>
                 </Header>
+                {ImageConditional()}
                 <Content>{post.content}</Content>
             </ContentWrapper>
             {DeleteButtonConditional()}

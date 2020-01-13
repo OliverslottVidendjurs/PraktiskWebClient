@@ -31,7 +31,7 @@ const Button = styled.button`
 
 const FlexContainer = styled.div`
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     margin-bottom: 30px;
 `;
 
@@ -43,10 +43,22 @@ const ADDPOST = gql`
     }
 `;
 
+const UPLOADIMG = gql`
+    mutation singleUpload($file: Upload!) {
+        singleUpload(file: $file)
+    }
+`;
+
 const AddPost = () => {
     const [message, setMessage] = useState<string>("");
     const [addpost] = useMutation(ADDPOST);
     const authContext = useContext(AuthContext);
+    const [uploadImg] = useMutation(UPLOADIMG, {
+        onCompleted(data) {
+            setFilename(data.singleUpload);
+        }
+    });
+    const [filename, setFilename] = useState<string>("");
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
         createPost();
@@ -62,10 +74,11 @@ const AddPost = () => {
         if (message === "") {
             alert("Feltet kan ikke være tomt!");
         } else {
+            console.log(filename);
             addpost({
                 variables: {
                     content: message,
-                    img: ""
+                    img: filename
                 },
                 refetchQueries: [{
                     query: GETPOSTS
@@ -84,6 +97,10 @@ const AddPost = () => {
         <form onSubmit={handleSubmit}>
             <TextArea onKeyUp={handleKeyDown} onChange={(e) => setMessage(e.target.value)} value={message} />
             <FlexContainer>
+                <input type="file" onChange={({ target: { validity, files: [file] } }) => {
+                    validity.valid && uploadImg({ variables: { file } })
+                }
+                } />
                 <Button>Opret</Button>
             </FlexContainer>
         </form>
