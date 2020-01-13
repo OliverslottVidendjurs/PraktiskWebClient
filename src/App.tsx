@@ -17,6 +17,7 @@ import { InMemoryCache } from "apollo-cache-inmemory";
 import { WebSocketLink } from "apollo-link-ws"
 import { getMainDefinition } from "apollo-utilities";
 import Chat from './components/chat/Chat';
+import { ChatContextProvider } from './components/contexts/ChatContext';
 
 
 const uploadLink = createUploadLink({
@@ -24,26 +25,26 @@ const uploadLink = createUploadLink({
 	credentials: "include"
 });
 
-const wsLink = new WebSocketLink({
-	uri: "ws://localhost:4000/graphql",
-	options: {
-		reconnect: true
-	}
-});
+// const wsLink = new WebSocketLink({
+// 	uri: "ws://localhost:4000/graphql",
+// 	options: {
+// 		reconnect: true
+// 	}	
+// });
 
-const link = split(({ query }) => {
-	const definition = getMainDefinition(query);
-	return (
-		definition.kind === "OperationDefinition" &&
-		definition.operation === "subscription"
-	)
-},
-	wsLink,
-	uploadLink);
+// const link = split(({ query }) => {
+// 	const definition = getMainDefinition(query);
+// 	return (
+// 		definition.kind === "OperationDefinition" &&
+// 		definition.operation === "subscription"
+// 	)
+// },
+// 	wsLink,
+// 	uploadLink);
 
 const client = new ApolloClient({
 	cache: new InMemoryCache(),
-	link
+	link: uploadLink
 });
 
 const AppContainer = styled.div`
@@ -62,10 +63,11 @@ const App: React.FC = () => {
 							<Route path="/login" component={LoginPage} />
 							<Route path="/register" component={Register} />
 							<Main>
-								<Chat />
-								<Header />
-								<Route path="/oversigt" component={OverviewPage}></Route>
-								<Route path="/profil/:id" component={Profile}></Route>
+								<ChatContextProvider>
+									<Header />
+									<Route path="/oversigt" component={OverviewPage}></Route>
+									<Route path="/profil/:id" component={Profile}></Route>
+								</ChatContextProvider>
 							</Main>
 						</Switch>
 					</AuthContextProvider>
@@ -77,9 +79,8 @@ const App: React.FC = () => {
 
 const Main = ({ children }: any) => {
 	const authContext = useContext(AuthContext);
-	console.log(authContext.authenticated);
-	if(authContext.authenticated === null) return null;
-	if(authContext.authenticated === false) return <Redirect to="/login" />
+	if (authContext.authenticated === null) return null;
+	if (authContext.authenticated === false) return <Redirect to="/login" />
 	return (
 		<div>
 			{children}

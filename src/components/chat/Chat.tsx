@@ -1,8 +1,9 @@
 import React, { FormEvent, useState, useRef, useEffect, useContext } from "react";
 import styled from "styled-components";
-import { gql } from "apollo-boost";
+import { gql, ApolloClient, InMemoryCache, NormalizedCacheObject } from "apollo-boost";
 import { useMutation, useQuery, useSubscription } from "@apollo/react-hooks";
-import { AuthContext } from "../contexts/AuthContext";
+import { IChatContextType, ChatContext } from "../contexts/ChatContext";
+import { WebSocketLink } from "apollo-link-ws";
 
 const ChatContainer = styled.div`
     position: fixed;
@@ -99,32 +100,45 @@ const MESSAGE_SUBSCRIPTION = gql`
         }
     }
 `;
-
+let client: ApolloClient<NormalizedCacheObject>;
 const Chat = () => {
-    const authContext = useContext(AuthContext);
+    //I'm sorry for my sins..
+    if(!client){
+       client = new ApolloClient({
+            cache: new InMemoryCache(),
+            link: new WebSocketLink({
+                uri: "ws://localhost:4000/graphql"
+            })
+        })
+    }
+    const chatContext = useContext<IChatContextType>(ChatContext);
     useSubscription(MESSAGE_SUBSCRIPTION, {
         onSubscriptionData: ({ subscriptionData }) => {
             setMessages([...messages, subscriptionData.data.messageAdded]);
-        }
+        },
+        shouldResubscribe: true,
+        client
     });
     const [newMessage, setNewMessage] = useState<string>("");
     const [addMessage] = useMutation(ADD_MESSAGE);
     const [messages, setMessages] = useState<any[]>([]);
     const { data } = useQuery(MESSAGES, {
         variables: {
-            friendId: authContext.State.id === 34 ? 35 : 34
+            friendId: chatContext.currentlyChattingId
         },
         onCompleted: () => {
+            console.log(data);
             setMessages(data.messages);
-        }
+        },
     });
+    
     const messageContainerRef = useRef<HTMLDivElement>(null);
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
         addMessage({
             variables: {
-                toId: authContext.State.id === 34 ? 35 : 34,
+                toId: chatContext.currentlyChattingId,
                 content: newMessage
             }
         });
@@ -136,12 +150,14 @@ const Chat = () => {
             messageContainerRef.current.scrollTo(0, messageContainerRef.current.scrollHeight)
         }
     });
-
     const MessagesList = messages.map((message: any) => {
         return (
             <p key={message.id}><b>{message.from_user.firstname}:</b> {message.content}</p>
         )
     });
+
+    
+    if(chatContext.currentlyChattingId === null) return null;
 
     return (
         <ChatContainer>

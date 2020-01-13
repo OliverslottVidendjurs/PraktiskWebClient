@@ -95,7 +95,7 @@ const AuthContextProvider = (props: any) => {
                 password
             }
         }).then(res => {
-            client?.resetStore();
+            client?.resetStore(); 
             setLoggedIn(true);
         }).catch(err => {
             alert(err);
