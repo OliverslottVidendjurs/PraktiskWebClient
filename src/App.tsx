@@ -20,12 +20,14 @@ import { ChatContextProvider } from './components/contexts/ChatContext';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
 import Friends from './components/friends/Friends';
 
+console.log(process.env.NODE_ENV);
+
 const uploadLink = createUploadLink({
-	uri: `http://167.172.110.163:5000/graphql`,
+	uri: process.env.NODE_ENV === "development" ? "http://localhost:5000/graphql" : "http://167.172.110.163:5000/graphql",
 	credentials: "include"
 });
 export let test = new SubscriptionClient(
-	"ws://167.172.110.163:5000/graphql",
+	process.env.NODE_ENV === "development" ? "ws://localhost:5000/graphql" : "ws://localhost:5000/graphql",
 	{
 		reconnect: true
 	}
@@ -73,7 +75,7 @@ const App: React.FC = () => {
 	return (
 		<ApolloProvider client={client}>
 			<AppContainer className="App">
-				<BrowserRouter basename="/praktisk/">
+				<BrowserRouter basename={process.env.PUBLIC_URL}>
 					<AuthContextProvider>
 						<Switch>
 							<Route path="/login" component={LoginPage} />
