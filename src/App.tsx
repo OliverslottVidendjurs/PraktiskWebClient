@@ -21,11 +21,11 @@ import { SubscriptionClient } from 'subscriptions-transport-ws';
 import Friends from './components/friends/Friends';
 
 const uploadLink = createUploadLink({
-	uri: "http://localhost:4000/graphql",
+	uri: "http://localhost:5000/graphql",
 	credentials: "include"
 });
 export let test = new SubscriptionClient(
-	"ws://localhost:4000/graphql",
+	"ws://localhost:5000/graphql",
 	{
 		reconnect: true
 	}
