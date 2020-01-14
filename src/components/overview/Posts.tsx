@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useQuery } from "@apollo/react-hooks";
 import Post from "./Post";
 import { postType } from "../../types/post";
@@ -13,9 +13,12 @@ interface PropsType {
 }
 
 const Posts = ({id}: PropsType) => {
-    const { data, loading } = useQuery<PostsData>(GETPOSTSBYID, {variables: {
+    const { data, loading, refetch } = useQuery<PostsData>(GETPOSTSBYID, {variables: {
         id
     }});
+    useEffect(() => {
+        refetch();
+    }, [refetch, id]);
     if (loading) {
         return (
             <div>Henter opslag...</div>

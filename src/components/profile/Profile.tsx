@@ -49,6 +49,9 @@ const RightWrapper = styled.div`
 const ComponentWrapper = styled.div`
     display: flex;
     justify-content: space-between;
+    padding-top: 40px;
+    margin: auto;
+    max-width: 960px;
 `;
 
 const EDITUSER = gql`
@@ -101,9 +104,7 @@ const Profile = () => {
     const [isOwner, setIsOwner] = useState<boolean>(false);
 
     useEffect(() => {
-        if (parseInt(id!) === authContext.State.id) {
-            setIsOwner(true);
-        }
+        setIsOwner(parseInt(id!) === authContext.State.id)
     }, [isOwner, id, authContext.State.id]);
 
     const handleNameSubmit = () => {
@@ -275,7 +276,6 @@ const Profile = () => {
             <LeftWrapper>
                 {InputFields}
                 {Dropdowns}
-                <button onClick={() => chatContext.openChat(parseInt(id!))}>Start chat</button>
             </LeftWrapper>
             <RightWrapper>
                 <Posts id={data?.userById.id!} />

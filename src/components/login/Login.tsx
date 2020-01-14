@@ -23,7 +23,7 @@ const Login = () => {
             <form onSubmit={handleSubmit}>
                 <Group>
                     <label htmlFor="username">Brugernavn</label>
-                    <input name="username" id="username" type="text" onChange={(e) => setUsername(e.target.value)} />
+                    <input autoFocus name="username" id="username" type="text" onChange={(e) => setUsername(e.target.value)} />
                 </Group>
                 <Group>
                     <label htmlFor="password">Password</label>

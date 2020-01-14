@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { useQuery } from "@apollo/react-hooks";
 import { userType } from "../../types/post";
 import { GETFRIENDS } from "../../schema/schema";
@@ -7,11 +7,13 @@ import Searchbar from "./Searchbar";
 import Friend from "./Friend";
 
 const Container = styled.div`
-    margin-bottom: 25px;
+    padding: 15px;
+    position: sticky;
+    top: 0;
 `;
 
 const HeaderTitle = styled.h3`
-    margin-bottom: 20px;
+    /* margin-bottom: 20px; */
     text-align: center;
 `;
 
@@ -21,7 +23,22 @@ const FriendsWrapper = styled.ul`
 
 const Friends = () => {
     const { data, loading } = useQuery(GETFRIENDS);
-    
+    const containerRef = useRef<HTMLDivElement>(null);
+    useEffect(() => {
+        let yPos = containerRef.current?.getBoundingClientRect().y;
+
+        if(containerRef.current && yPos)
+            containerRef.current.style.height = (window.innerHeight-yPos) + "px";
+
+        const updateHeight = () => {
+            if(containerRef.current && yPos)
+            containerRef.current.style.height = (window.innerHeight-yPos) + "px";
+        }
+        window.addEventListener("resize", updateHeight);
+        return (() => {
+            window.removeEventListener("resize", updateHeight)
+        });
+    }, [containerRef]);
     let FriendList;
     if (!loading) {
         if (data) {
@@ -32,10 +49,10 @@ const Friends = () => {
             });
         }
     } else {
-        return <div>Henter venner...</div>
+        FriendList = <div>Henter venner...</div>
     }
     return (
-        <Container>
+        <Container ref={containerRef}>
             <HeaderTitle>Venner</HeaderTitle>
             <Searchbar/>
             <FriendsWrapper>

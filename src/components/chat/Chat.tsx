@@ -1,23 +1,23 @@
 import React, { FormEvent, useState, useRef, useEffect, useContext } from "react";
 import styled from "styled-components";
-import { gql, ApolloClient, InMemoryCache, NormalizedCacheObject } from "apollo-boost";
+import { gql } from "apollo-boost";
 import { useMutation, useQuery, useSubscription } from "@apollo/react-hooks";
 import { IChatContextType, ChatContext } from "../contexts/ChatContext";
-import { WebSocketLink } from "apollo-link-ws";
 
 const ChatContainer = styled.div`
     position: fixed;
     width: 400px;
     height: 400px;
-    right: 0;
     bottom: 0;
+    right: 320px;
     border: 1px solid #00000066;
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
-    background-color: #f3f3f3;
+    background-color: #f9f9f9;
     z-index: 9999;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 `;
 
 const ChatField = styled.input`
@@ -57,6 +57,28 @@ const MessagesContainer = styled.div`
     height: 100%;
     overflow-y: scroll;
     padding: 15px;
+`;
+
+const FriendNameContainer = styled.div`
+    padding: 10px;
+    border-bottom: 1px solid black;
+    background-color: #0a2aa0;
+    display: flex;
+    justify-content: space-between;
+    p {
+        font-weight: bold;
+        color: white;
+    }
+`;
+
+const CloseButton = styled.button`
+    border: none;
+    background: none;
+    color: white;
+    font-weight: bold;
+    padding-left: 5px;
+    padding-right: 5px;
+    cursor: pointer;
 `;
 
 const ADD_MESSAGE = gql`
@@ -100,25 +122,30 @@ const MESSAGE_SUBSCRIPTION = gql`
         }
     }
 `;
-let client: ApolloClient<NormalizedCacheObject>;
-const Chat = () => {
-    //I'm sorry for my sins..
-    if(!client){
-       client = new ApolloClient({
-            cache: new InMemoryCache(),
-            link: new WebSocketLink({
-                uri: "ws://localhost:4000/graphql"
-            })
-        })
+
+const GETUSERBYID = gql`
+    query userById($id: Int) {
+        userById(id: $id) {
+            firstname,
+            lastname
+        }
     }
+`;
+
+const Chat = () => {
     const chatContext = useContext<IChatContextType>(ChatContext);
+    const {data: userData, loading: userLoading} = useQuery(GETUSERBYID,{
+        variables: {
+            id: chatContext.currentlyChattingId
+        }
+    });
     useSubscription(MESSAGE_SUBSCRIPTION, {
         onSubscriptionData: ({ subscriptionData }) => {
             setMessages([...messages, subscriptionData.data.messageAdded]);
         },
-        shouldResubscribe: true,
-        client
+        shouldResubscribe: true
     });
+
     const [newMessage, setNewMessage] = useState<string>("");
     const [addMessage] = useMutation(ADD_MESSAGE);
     const [messages, setMessages] = useState<any[]>([]);
@@ -131,7 +158,7 @@ const Chat = () => {
             setMessages(data.messages);
         },
     });
-    
+
     const messageContainerRef = useRef<HTMLDivElement>(null);
 
     const handleSubmit = (e: FormEvent) => {
@@ -156,16 +183,18 @@ const Chat = () => {
         )
     });
 
-    
-    if(chatContext.currentlyChattingId === null) return null;
-
+    if (chatContext.currentlyChattingId === null) return null;
     return (
         <ChatContainer>
+            <FriendNameContainer>
+                <p>{(!userLoading && userData) ? `${userData.userById.firstname} ${userData.userById.lastname}` : null}</p>
+                <CloseButton onClick={() => chatContext.closeChat()}>X</CloseButton>
+            </FriendNameContainer>
             <MessagesContainer ref={messageContainerRef}>
                 {MessagesList}
             </MessagesContainer>
             <ChatFieldForm onSubmit={handleSubmit}>
-                <ChatField onChange={(e) => setNewMessage(e.target.value)} value={newMessage}>
+                <ChatField autoFocus onChange={(e) => setNewMessage(e.target.value)} value={newMessage}>
 
                 </ChatField>
                 <SendMessageButton>

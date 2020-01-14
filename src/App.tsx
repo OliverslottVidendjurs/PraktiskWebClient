@@ -16,40 +16,56 @@ import "../node_modules/@fortawesome/fontawesome-free/css/all.css";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { WebSocketLink } from "apollo-link-ws"
 import { getMainDefinition } from "apollo-utilities";
-import Chat from './components/chat/Chat';
 import { ChatContextProvider } from './components/contexts/ChatContext';
-
+import { SubscriptionClient } from 'subscriptions-transport-ws';
+import Friends from './components/friends/Friends';
 
 const uploadLink = createUploadLink({
 	uri: "http://localhost:4000/graphql",
 	credentials: "include"
 });
+export let test = new SubscriptionClient(
+	"ws://localhost:4000/graphql",
+	{
+		reconnect: true
+	}
+);
 
-// const wsLink = new WebSocketLink({
-// 	uri: "ws://localhost:4000/graphql",
-// 	options: {
-// 		reconnect: true
-// 	}	
-// });
+const wsLink = new WebSocketLink(test);
 
-// const link = split(({ query }) => {
-// 	const definition = getMainDefinition(query);
-// 	return (
-// 		definition.kind === "OperationDefinition" &&
-// 		definition.operation === "subscription"
-// 	)
-// },
-// 	wsLink,
-// 	uploadLink);
+const link = split(({ query }) => {
+	const definition = getMainDefinition(query);
+	return (
+		definition.kind === "OperationDefinition" &&
+		definition.operation === "subscription"
+	)
+},
+	wsLink,
+	uploadLink);
 
 const client = new ApolloClient({
 	cache: new InMemoryCache(),
-	link: uploadLink
+	link
 });
 
 const AppContainer = styled.div`
-	margin: 0 auto;
-	max-width: 1200px;
+	/* margin: 0 auto;
+	max-width: 1200px; */
+`;
+
+const FlexWrapper = styled.div`
+    display: flex;
+`;
+
+const Left = styled.div`
+    width: 100%;
+	margin-right: 10px;
+`;
+
+const Right = styled.div`
+	margin-left: 10px;
+	border-left: 1px solid black;
+	background-color: #f9f9f9;
 `;
 
 
@@ -65,8 +81,15 @@ const App: React.FC = () => {
 							<Main>
 								<ChatContextProvider>
 									<Header />
-									<Route path="/oversigt" component={OverviewPage}></Route>
-									<Route path="/profil/:id" component={Profile}></Route>
+									<FlexWrapper>
+										<Left>
+											<Route path="/oversigt" component={OverviewPage}></Route>
+											<Route path="/profil/:id" component={Profile}></Route>
+										</Left>
+										<Right>
+											<Friends />
+										</Right>
+									</FlexWrapper>
 								</ChatContextProvider>
 							</Main>
 						</Switch>

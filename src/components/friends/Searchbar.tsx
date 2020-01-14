@@ -72,6 +72,10 @@ const Dropdown = styled.div`
     }
 `;
 
+const FlexWrapper = styled.div`
+    display: flex;
+`;
+
 
 const ADDFRIEND = gql`
     mutation addFriend($id: Int){
@@ -138,13 +142,15 @@ const Searchbar = () => {
     return (
         <SearchBar onSubmit={addFriendSubmit}>
             <label htmlFor="">Tilføj ven: </label>
-            <Input ref={inputElm} list="list" onChange={(e) => setFriendName(e.target.value)} value={friendName} type="text" />
+            <FlexWrapper>
+                <Input ref={inputElm} list="list" onChange={(e) => setFriendName(e.target.value)} value={friendName} type="text" />
+                <AddButton>Tilføj</AddButton>
+            </FlexWrapper>
             <Dropdown ref={dropdownElm}>
                 <ul>
                     {FriendOptions()}
                 </ul>
             </Dropdown>
-            <AddButton>Tilføj</AddButton>
         </SearchBar>
     )
 }

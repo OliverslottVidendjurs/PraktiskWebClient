@@ -15,7 +15,7 @@ const List = styled.ul`
         a {
             display: block;
             text-decoration: none;
-            color: black;
+            color: white;
         }
         &:not(:last-of-type){
             margin-right: 10px;
@@ -26,13 +26,15 @@ const List = styled.ul`
 const HeaderContainer = styled.header`
     display: flex;
     justify-content: space-between;
-    margin-bottom: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+    background-color: #2c3fc7;
 `;
 
 const LogoutButton = styled.button`    
     display: block;
     text-decoration: none;
-    color: black;
+    color: white;
     border: none;
     background: none;
     font-size: 20px;
@@ -48,6 +50,7 @@ const FlexWrapper = styled.div`
         text-decoration: none;
         color: black;
         font-size: 20px;
+        color: white;
     }
 `;
 
