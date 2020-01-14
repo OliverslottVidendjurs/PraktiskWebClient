@@ -91,7 +91,7 @@ const Post = ({ post }: propType) => {
             return null;
 
         return (
-            <Img src={`/images/${post.img}`} alt="img" />
+            <Img src={`/praktisk/images/${post.img}`} alt="img" />
         )
     }
 
