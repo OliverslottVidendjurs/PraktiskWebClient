@@ -26,14 +26,14 @@ const uploadLink = createUploadLink({
 	uri: process.env.NODE_ENV === "production" ? "http://167.172.110.163:5000/graphql" : "http://localhost:5000/graphql",
 	credentials: "include"
 });
-export let test = new SubscriptionClient(
+export let subscriptionClient = new SubscriptionClient(
 	process.env.NODE_ENV === "production" ? "ws://localhost:5000/graphql" : "ws://localhost:5000/graphql" ,
 	{
 		reconnect: true
 	}
 );
 
-const wsLink = new WebSocketLink(test);
+const wsLink = new WebSocketLink(subscriptionClient);
 
 const link = split(({ query }) => {
 	const definition = getMainDefinition(query);

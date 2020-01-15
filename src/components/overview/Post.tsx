@@ -99,7 +99,7 @@ const Post = ({ post }: propType) => {
         <PostWrapper>
             <ContentWrapper>
                 <Header>
-                    <PosterName><Link to={`/profil/${post.user.id}`}>{post.user.firstname} {post.user.lastname}</Link></PosterName>
+                    <PosterName><Link to={`/profil/${post.user_id}`}>{post.user.firstname} {post.user.lastname}</Link></PosterName>
                     <TimeStamp>{new Date(parseInt(post.date)).toLocaleString()}</TimeStamp>
                 </Header>
                 {ImageConditional()}

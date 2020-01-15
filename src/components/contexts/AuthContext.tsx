@@ -3,7 +3,7 @@ import { gql } from "apollo-boost";
 import { useLazyQuery, useMutation } from "@apollo/react-hooks";
 import { Redirect, useLocation } from "react-router-dom";
 import { USER } from "../../schema/schema";
-import { test } from "../../App";
+import { subscriptionClient } from "../../App";
 
 //https://www.sumologic.com/blog/react-hook-typescript/
 type Action =
@@ -97,7 +97,7 @@ const AuthContextProvider = (props: any) => {
             }
         }).then(res => {
             client?.resetStore(); 
-            test.close(false, false);
+            subscriptionClient.close(false, false);
             setLoggedIn(true);
         }).catch(err => {
             alert(err);
@@ -113,7 +113,7 @@ const AuthContextProvider = (props: any) => {
             client?.clearStore();
             setRedirect(true);
             setAuthenticated(null);
-            test.close(false, false);
+            subscriptionClient.close(false, false);
             dispatch({ type: "logout" });
         }).catch(error => {
             alert(error);
