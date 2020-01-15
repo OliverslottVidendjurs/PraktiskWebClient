@@ -23,11 +23,11 @@ import Friends from './components/friends/Friends';
 console.log(process.env.NODE_ENV);
 
 const uploadLink = createUploadLink({
-	uri: process.env.NODE_ENV === "production" ? "https://oliverslott.com/graphql" : "http://localhost:5000/graphql",
+	uri: process.env.NODE_ENV === "production" ? "https://www.oliverslott.com/graphql" : "http://localhost:5000/graphql",
 	credentials: "include"
 });
 export let subscriptionClient = new SubscriptionClient(
-	process.env.NODE_ENV === "production" ? "wss://oliverslott.com:5000/graphql" : "ws://localhost:5000/graphql" ,
+	process.env.NODE_ENV === "production" ? "wss://www.oliverslott.com/graphql" : "ws://localhost:5000/graphql" ,
 	{
 		reconnect: true
 	}
