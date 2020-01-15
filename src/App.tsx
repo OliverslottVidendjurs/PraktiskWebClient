@@ -27,7 +27,7 @@ const uploadLink = createUploadLink({
 	credentials: "include"
 });
 export let subscriptionClient = new SubscriptionClient(
-	process.env.NODE_ENV === "production" ? "ws://localhost:5000/graphql" : "ws://localhost:5000/graphql" ,
+	process.env.NODE_ENV === "production" ? "ws://167.172.110.163:5000/graphql" : "ws://localhost:5000/graphql" ,
 	{
 		reconnect: true
 	}
