@@ -1,27 +1,17 @@
 import React, { useContext } from "react";
 import { postType } from "../../types/post";
 import styled from "styled-components";
-import { useMutation, useQuery } from "@apollo/react-hooks";
+import { useMutation } from "@apollo/react-hooks";
 import { DELETEPOST, GETPOSTS, GETPOSTSBYID } from "../../schema/schema";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
-import { gql } from "apollo-boost";
+import Comments from "./Comments";
+import { DeleteButton } from "../../styles/styles";
+import Like from "./Like";
 
 interface propType {
     post: postType
 }
-
-const DeleteButton = styled.button`
-    cursor: pointer;
-    border: none;
-    background: none;
-    height: 100%;
-    margin-left: 20px;
-    &:hover {
-        background-color: #d4d4d4;
-    }
-    padding: 5px;
-`;
 
 const ContentWrapper = styled.div`
     width: 100%;
@@ -66,46 +56,14 @@ const Img = styled.img`
 `;
 
 const InteractionWrapper = styled.div`
-    display: flex;
     margin-top: 15px;
     padding-top: 5px;
     border-top: 1px solid black;
 `;
 
-const LikeButton = styled.button`
-    cursor: pointer;
-    border: none;
-    background: none;
-    font-size: 24px;
-`;
-
-const LikeCounter = styled.span`
-    font-size: 24px;
-    margin-right: 5px;
-`;
-
-const LIKES = gql`
-    query likes($postId: Int) {
-        likes(postId: $postId) {
-            id
-        }
-    }
-`;
-
-const LIKEPOST = gql`
-    mutation likePost($id: Int) {
-        likePost(id: $id)
-    }
-`;
 
 const Post = ({ post }: propType) => {
     const [deletePost] = useMutation(DELETEPOST);
-    const { data, loading } = useQuery(LIKES, {
-        variables: {
-            postId: post.id
-        }
-    });
-    const [likePost] = useMutation(LIKEPOST);
     const authContext = useContext(AuthContext);
     const handleDeleteClick = () => {
         deletePost({
@@ -150,18 +108,8 @@ const Post = ({ post }: propType) => {
                 {ImageConditional()}
                 <Content>{post.content}</Content>
                 <InteractionWrapper>
-                    <LikeCounter>{(!loading && data.likes ? data.likes.length : null)}</LikeCounter>
-                    <LikeButton onClick={() => likePost({
-                        variables: {
-                            id: post.id
-                        },
-                        refetchQueries: [{
-                            query: LIKES,
-                            variables: {
-                                postId: post.id
-                            }
-                        }]
-                    })}>Like</LikeButton>
+                    <Like variables={{postId: post.id}} />
+                    <Comments postId={post.id}></Comments>
                 </InteractionWrapper>
             </ContentWrapper>
             {DeleteButtonConditional()}

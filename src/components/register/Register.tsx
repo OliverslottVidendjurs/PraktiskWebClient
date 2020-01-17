@@ -3,6 +3,15 @@ import { gql } from "apollo-boost";
 import { useMutation } from "@apollo/react-hooks";
 import { Group, Button } from "../../styles/styles";
 import { Link } from "react-router-dom";
+import styled from "styled-components";
+
+const ComponentWrapper = styled.form`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+`;
 
 const Register = () => {
     const [username, setUsername] = useState<string>();
@@ -40,7 +49,7 @@ const Register = () => {
         });
     }
     return (
-        <form onSubmit={handleSubmit}>
+        <ComponentWrapper onSubmit={handleSubmit}>
             <h2>Opret bruger</h2>
             <Group>
                 <label htmlFor="username">Brugernavn</label>
@@ -72,7 +81,7 @@ const Register = () => {
             </Group>
             <Button>Opret</Button>
             <Link to="/login">Tilbage til login</Link>
-        </form>
+        </ComponentWrapper>
     )
 }
 

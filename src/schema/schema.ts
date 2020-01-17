@@ -72,3 +72,14 @@ export const GETFRIENDS = gql`
         }
     }
 `;
+
+export const COMMENTS = gql`
+    query comments($postId: Int, $commentId: Int) {
+        comments(postId: $postId, commentId: $commentId) {
+            id
+            content
+            user_id
+            post_id
+        }
+    }
+`;

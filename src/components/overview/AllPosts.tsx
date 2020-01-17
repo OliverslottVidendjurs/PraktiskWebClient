@@ -16,7 +16,6 @@ const AllPosts = () => {
         )
     } else {
         const PostList = data?.posts?.slice().sort((a, b) => { return parseInt(b.date) - parseInt(a.date)}).map(post => {
-            console.log(post);
             return (
                 <Post key={post.id} post={post} />
             )

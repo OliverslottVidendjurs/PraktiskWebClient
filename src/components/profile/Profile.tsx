@@ -7,7 +7,6 @@ import Posts from '../overview/Posts';
 import { useParams } from 'react-router-dom';
 import { USERBYID } from '../../schema/schema';
 import { countryList } from '../../other/other';
-import { IChatContextType, ChatContext } from '../contexts/ChatContext';
 
 const EditButton = styled.button`
     cursor: pointer;
@@ -90,7 +89,6 @@ interface PostData {
 
 const Profile = () => {
     const authContext = useContext<IContextType>(AuthContext);
-    const chatContext = useContext<IChatContextType>(ChatContext);
     const [editing, setEditing] = useState<boolean>(false);
     const [newText, setNewText] = useState<string>("");
     const [currentInputId, setCurrentInputId] = useState<string>("");
