@@ -6,7 +6,8 @@ import { IChatContextType, ChatContext } from "../contexts/ChatContext";
 
 const ChatContainer = styled.div`
     position: fixed;
-    width: 400px;
+    width: 100%;
+    max-width: 400px;
     height: 400px;
     bottom: 0;
     right: 320px;
@@ -18,6 +19,9 @@ const ChatContainer = styled.div`
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    @media (max-width: 700px){
+        right: 0;
+    }
 `;
 
 const ChatField = styled.input`
