@@ -33,6 +33,8 @@ const Register = () => {
 
     const [register] = useMutation(REGISTER);
 
+    document.title = "Opret Bruger";
+
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
         register({

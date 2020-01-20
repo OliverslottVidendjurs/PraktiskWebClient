@@ -15,6 +15,7 @@ const FlexWrapper = styled.div`
 `;
 
 const OverviewPage = () => {
+    document.title = "Oversigt";
     return (
         <Container>
             <AddPost />

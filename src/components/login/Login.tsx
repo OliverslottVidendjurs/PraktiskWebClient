@@ -1,5 +1,5 @@
 import React, { useState, FormEvent, useContext } from "react";
-import { Group, Button, Header, ButtonLink, BackButton, CreateUserButton } from "../../styles/styles";
+import { Group, Button, Header, CreateUserButton } from "../../styles/styles";
 import { AuthContext } from "../contexts/AuthContext";
 import styled from "styled-components";
 
@@ -15,7 +15,8 @@ const Login = () => {
     const [username, setUsername] = useState<string>();
     const [password, setPassword] = useState<string>();
     const authContext = useContext(AuthContext);
-
+    document.title = "Login";
+    
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
         if (username && password) {

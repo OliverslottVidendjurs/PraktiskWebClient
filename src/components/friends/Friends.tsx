@@ -10,6 +10,9 @@ const Container = styled.div`
     padding: 15px;
     position: sticky;
     top: 0;
+    @media (max-width: 700px) {
+        display: none;
+    }
 `;
 
 const HeaderTitle = styled.h3`

@@ -120,6 +120,8 @@ const Profile = () => {
         });
     }
 
+    document.title = "Profil";
+
     const handleCountrySubmit = (e: FormEvent) => {
         const dropdownElm = (e.target as HTMLSelectElement);
         editUser({
