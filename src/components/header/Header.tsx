@@ -135,11 +135,17 @@ const Header = () => {
     }, [menuShowing]);
 
     useEffect(() => {
+        const hideMenu = () => {
+            setMenuShowing(false);
+        }
+
         headerRef.current?.querySelectorAll("a").forEach(element => {
-            element.addEventListener("click", () => {
-                setMenuShowing(false);
-            });
+            element.addEventListener("click", hideMenu);
         });
+        window.addEventListener("scroll", hideMenu);
+        return () => {
+            window.removeEventListener("scroll", hideMenu);
+        }
     }, []);
 
     return (
