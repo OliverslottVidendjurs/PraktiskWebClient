@@ -1,7 +1,8 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useRef, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { AuthContext, IContextType } from "../contexts/AuthContext";
+import {ReactComponent as MenuIcon} from "../../gfx/icon-menu.svg"
 
 const List = styled.ul`
     list-style: none;
@@ -83,9 +84,10 @@ const FlexWrapper = styled.div`
 
 const MenuButton = styled.button`
     z-index: 2;
-    padding: 5px 10px;
     background: none;
     border: none;
+    margin-left: 5px;   
+    height: 100%;
     i {
         font-size: 50px;
     }
@@ -112,6 +114,11 @@ const MobileHeader = styled.div`
     @media (max-width: 700px){
         display: block;
     }
+    height: 50px;
+`;
+
+const MenuIconStyled = styled(MenuIcon) `
+    height: 100%;
 `;
 
 const Header = () => {
@@ -119,25 +126,27 @@ const Header = () => {
     const headerRef = useRef<HTMLHeadElement>(null);
     const [menuShowing, setMenuShowing] = useState<boolean>(false);
 
-    const clicklogout = () => {
-        authContext.logout();
-    }
-
-    const openMenu = () => {
+    useEffect(() => {
         if (menuShowing) {
-            setMenuShowing(false);
-            headerRef.current?.classList.remove("show");
-        } else {
-            setMenuShowing(true);
             headerRef.current?.classList.add("show");
+        } else {
+            headerRef.current?.classList.remove("show");
         }
-    }
+    }, [menuShowing]);
+
+    useEffect(() => {
+        headerRef.current?.querySelectorAll("a").forEach(element => {
+            element.addEventListener("click", () => {
+                setMenuShowing(false);
+            });
+        });
+    }, []);
 
     return (
         <ComponentWrapper>
             <MobileHeader>
-                <MenuButton onClick={openMenu}>
-                    <i className="fas fa-bars"></i>
+                <MenuButton onClick={() => setMenuShowing(!menuShowing)}>
+                    <MenuIconStyled/>
                 </MenuButton>
             </MobileHeader>
             <HeaderContainer ref={headerRef}>
@@ -153,7 +162,7 @@ const Header = () => {
                                 </Link>
                             </li>
                             <li>
-                                <LogoutButton onClick={clicklogout}>Log ud</LogoutButton>
+                                <LogoutButton onClick={() => authContext.logout()}>Log ud</LogoutButton>
                             </li>
                         </FlexWrapper>
                     </List>

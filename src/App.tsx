@@ -56,7 +56,10 @@ const AppContainer = styled.div`
 `;
 
 const FlexWrapper = styled.div`
-    display: flex;
+	display: flex;
+	@media (max-width: 700px) {
+		padding-top: 50px;
+	}
 `;
 
 const Left = styled.div`
