@@ -1,6 +1,5 @@
 import React, { useState, FormEvent, useContext } from "react";
-import { Group, Button } from "../../styles/styles";
-import { Link } from "react-router-dom";
+import { Group, Button, Header, ButtonLink } from "../../styles/styles";
 import { AuthContext } from "../contexts/AuthContext";
 import styled from "styled-components";
 
@@ -10,11 +9,6 @@ const ComponentWrapper = styled.div`
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-`;
-
-const Title = styled.h2`
-    margin-bottom: 10px;
-    text-align: center;
 `;
 
 const Login = () => {
@@ -35,7 +29,7 @@ const Login = () => {
         <ComponentWrapper>
             <div>
                 <form onSubmit={handleSubmit}>
-                <Title>Login</Title>
+                    <Header>Login</Header>
                     <Group>
                         <label htmlFor="username">Brugernavn</label>
                         <input autoFocus name="username" id="username" type="text" onChange={(e) => setUsername(e.target.value)} />
@@ -46,7 +40,9 @@ const Login = () => {
                     </Group>
                     <Button>Login</Button>
                 </form>
-                <Link to="/register">Opret ny bruger</Link>
+                <Group>
+                    <ButtonLink to="/register">Opret ny bruger</ButtonLink>
+                </Group>
             </div>
         </ComponentWrapper>
     )

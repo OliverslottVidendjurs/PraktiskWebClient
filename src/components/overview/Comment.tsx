@@ -4,7 +4,7 @@ import { useQuery, useMutation } from "@apollo/react-hooks";
 import { COMMENTS, USERBYID } from "../../schema/schema";
 import { IContextType, AuthContext } from "../contexts/AuthContext";
 import { gql } from "apollo-boost";
-import { DeleteButton, LikeButton, LikeCounter } from "../../styles/styles";
+import { DeleteButton } from "../../styles/styles";
 import { Link } from "react-router-dom";
 import Like from "./Like";
 

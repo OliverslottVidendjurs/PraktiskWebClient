@@ -1,9 +1,10 @@
-import React, { useState, FormEvent } from "react";
+import React, { useState, FormEvent, useContext } from "react";
 import { gql } from "apollo-boost";
 import { useMutation } from "@apollo/react-hooks";
-import { Group, Button } from "../../styles/styles";
-import { Link } from "react-router-dom";
+import { Group, Button, BackButton, ButtonGroup, Header } from "../../styles/styles";
 import styled from "styled-components";
+import { countryList } from "../../other/other";
+import { AuthContext } from "../contexts/AuthContext";
 
 const ComponentWrapper = styled.form`
     display: flex;
@@ -14,12 +15,13 @@ const ComponentWrapper = styled.form`
 `;
 
 const Register = () => {
+    const authContext = useContext(AuthContext);
     const [username, setUsername] = useState<string>();
     const [password, setPassword] = useState<string>();
     const [email, setEmail] = useState<string>();
     const [firstname, setFirstname] = useState<string>();
     const [lastname, setLastname] = useState<string>();
-    const [country, setCountry] = useState<string>();
+    const [country, setCountry] = useState<string>(countryList[0]);
 
     const REGISTER = gql`
         mutation register($username: String, $password: String, $email: String, $firstname: String, $lastname: String, $country: String) {
@@ -43,14 +45,21 @@ const Register = () => {
                 country
             }
         }).then(() => {
-            alert("Oprettet bruger!");
+            if (username && password)
+                authContext.login(username, password);
         }).catch(err => {
             alert(err);
         });
     }
+    const List = countryList.map(elm => {
+        return (
+            <option key={elm} value={elm}>{elm}</option>
+        )
+    });
+
     return (
         <ComponentWrapper onSubmit={handleSubmit}>
-            <h2>Opret bruger</h2>
+            <Header>Opret bruger</Header>
             <Group>
                 <label htmlFor="username">Brugernavn</label>
                 <input onChange={(e) => setUsername(e.target.value)} type="text" name="username" id="username" />
@@ -69,7 +78,9 @@ const Register = () => {
             </Group>
             <Group>
                 <label htmlFor="country">Land</label>
-                <input onChange={(e) => setCountry(e.target.value)} type="text" name="country" id="country" />
+                <select value={country} onChange={(e) => setCountry(e.target.value)}>
+                    {List}
+                </select>
             </Group>
             <Group>
                 <label htmlFor="password">Password</label>
@@ -79,8 +90,12 @@ const Register = () => {
                 <label htmlFor="passwordAgain">Gentag password</label>
                 <input type="password" name="passwordAgain" id="passwordAgain" />
             </Group>
-            <Button>Opret</Button>
-            <Link to="/login">Tilbage til login</Link>
+            <ButtonGroup>
+                <Button>Opret</Button>
+            </ButtonGroup>
+            <ButtonGroup>
+                <BackButton to="/login">Tilbage til login</BackButton>
+            </ButtonGroup>
         </ComponentWrapper>
     )
 }

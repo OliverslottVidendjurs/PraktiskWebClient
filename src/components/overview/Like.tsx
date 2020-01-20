@@ -13,19 +13,6 @@ const LIKES = gql`
     }
 `;
 
-
-const LIKEPOST = gql`
-    mutation likePost($id: Int) {
-        likePost(id: $id)
-    }
-`;
-
-const LIKECOMMENT = gql`
-    mutation likeComment($id: Int) {
-        likeComment(id: $id)
-    }
-`;
-
 const LIKE = gql`
     mutation like($postId: Int, $commentId: Int){
         like(postId: $postId, commentId: $commentId)
