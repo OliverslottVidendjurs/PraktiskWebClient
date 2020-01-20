@@ -44,6 +44,7 @@ const PosterName = styled.p`
 
 const TimeStamp = styled.p`
     color: #000000a8;
+    padding: 5px;
 `;
 
 const Content = styled.p`
@@ -59,6 +60,10 @@ const InteractionWrapper = styled.div`
     margin-top: 15px;
     padding-top: 5px;
     border-top: 1px solid black;
+`;
+
+const RightSideHeader = styled.div`
+    display: flex;
 `;
 
 
@@ -103,16 +108,18 @@ const Post = ({ post }: propType) => {
             <ContentWrapper>
                 <Header>
                     <PosterName><Link to={`/profil/${post.user_id}`}>{post.user.firstname} {post.user.lastname}</Link></PosterName>
-                    <TimeStamp>{new Date(parseInt(post.date)).toLocaleString()}</TimeStamp>
+                    <RightSideHeader>
+                        <TimeStamp>{new Date(parseInt(post.date)).toLocaleString()}</TimeStamp>
+                        {DeleteButtonConditional()}
+                    </RightSideHeader>
                 </Header>
                 {ImageConditional()}
                 <Content>{post.content}</Content>
                 <InteractionWrapper>
-                    <Like variables={{postId: post.id}} />
+                    <Like variables={{ postId: post.id }} />
                     <Comments postId={post.id}></Comments>
                 </InteractionWrapper>
             </ContentWrapper>
-            {DeleteButtonConditional()}
         </PostWrapper>
     )
 }

@@ -106,6 +106,7 @@ export const DeleteButton = styled.button`
     background: none;
     height: 100%;
     margin-left: 20px;
+    font-size: 16px;
     &:hover {
         background-color: #d4d4d4;
     }

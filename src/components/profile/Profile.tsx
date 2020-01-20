@@ -39,10 +39,19 @@ const InputWrapper = styled.div`
 
 const LeftWrapper = styled.div`
     width: 50%;
+    @media (max-width: 850px){
+        flex-direction: column;
+        width: 100%;
+        margin-bottom: 20px;
+    }
 `;
 
 const RightWrapper = styled.div`
     width: 50%;
+    @media (max-width: 850px){
+        flex-direction: column;
+        width: 100%;
+    }
 `;
 
 const ComponentWrapper = styled.div`
@@ -51,6 +60,9 @@ const ComponentWrapper = styled.div`
     padding-top: 40px;
     margin: auto;
     max-width: 960px;
+    @media (max-width: 850px){
+        flex-direction: column;
+    }
 `;
 
 const EDITUSER = gql`

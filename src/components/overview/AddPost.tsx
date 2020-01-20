@@ -49,6 +49,10 @@ const UPLOADIMG = gql`
     }
 `;
 
+const AddImageButton = styled.input`
+    width: 100%;
+`;
+
 const AddPost = () => {
     const [message, setMessage] = useState<string>("");
     const [addpost] = useMutation(ADDPOST);
@@ -97,7 +101,7 @@ const AddPost = () => {
         <form onSubmit={handleSubmit}>
             <TextArea onKeyUp={handleKeyDown} onChange={(e) => setMessage(e.target.value)} value={message} />
             <FlexContainer>
-                <input type="file" onChange={({ target: { validity, files: [file] } }) => {
+                <AddImageButton type="file" onChange={({ target: { validity, files: [file] } }) => {
                     validity.valid && uploadImg({ variables: { file } })
                 }
                 } />

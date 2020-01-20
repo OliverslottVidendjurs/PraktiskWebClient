@@ -62,12 +62,18 @@ const FlexWrapper = styled.div`
 const Left = styled.div`
     width: 100%;
 	margin-right: 10px;
+	@media (max-width: 700px) {
+        margin: 0;
+    }
 `;
 
 const Right = styled.div`
 	margin-left: 10px;
 	border-left: 1px solid black;
 	background-color: #f9f9f9;
+	@media (max-width: 700px) {
+        margin: 0;
+    }
 `;
 
 

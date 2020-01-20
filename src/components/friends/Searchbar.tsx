@@ -83,6 +83,11 @@ const ADDFRIEND = gql`
     }
 `;
 
+const Title = styled.label`
+    margin-bottom: 5px;
+    display: block;
+`;
+
 const Searchbar = () => {
     const [friendName, setFriendName] = useState<string>("");
     const { data, loading } = useQuery(GETALLUSERS);
@@ -141,9 +146,9 @@ const Searchbar = () => {
 
     return (
         <SearchBar onSubmit={addFriendSubmit}>
-            <label htmlFor="">Tilføj ven: </label>
+            <Title htmlFor="searchbar">Tilføj ven: </Title>
             <FlexWrapper>
-                <Input ref={inputElm} list="list" onChange={(e) => setFriendName(e.target.value)} value={friendName} type="text" />
+                <Input id="searchbar" ref={inputElm} list="list" onChange={(e) => setFriendName(e.target.value)} value={friendName} type="text" />
                 <AddButton>Tilføj</AddButton>
             </FlexWrapper>
             <Dropdown ref={dropdownElm}>
