@@ -13,7 +13,7 @@ const Container = styled.div`
 `;
 
 const HeaderTitle = styled.h3`
-    /* margin-bottom: 20px; */
+    margin-bottom: 10px;
     text-align: center;
 `;
 

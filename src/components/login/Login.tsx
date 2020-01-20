@@ -1,5 +1,5 @@
 import React, { useState, FormEvent, useContext } from "react";
-import { Group, Button, Header, ButtonLink } from "../../styles/styles";
+import { Group, Button, Header, ButtonLink, BackButton, CreateUserButton } from "../../styles/styles";
 import { AuthContext } from "../contexts/AuthContext";
 import styled from "styled-components";
 
@@ -41,7 +41,7 @@ const Login = () => {
                     <Button>Login</Button>
                 </form>
                 <Group>
-                    <ButtonLink to="/register">Opret ny bruger</ButtonLink>
+                    <CreateUserButton to="/register">Opret ny bruger</CreateUserButton>
                 </Group>
             </div>
         </ComponentWrapper>

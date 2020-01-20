@@ -64,7 +64,7 @@ const Header = () => {
             <nav>
                 <List>
                     <li>
-                        <Link to="/oversigt">Oversigt</Link>
+                        <Link to="/">Oversigt</Link>
                     </li>
                 </List>
             </nav>

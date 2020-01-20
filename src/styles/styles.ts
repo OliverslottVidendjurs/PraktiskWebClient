@@ -84,6 +84,22 @@ export const BackButton = styled(Link)`
     }
 `;
 
+export const CreateUserButton = styled(Link)`
+    font-size: 20px;
+    width: 100%;
+    color: #5f5f5f;;
+    border: none;
+    padding: 11px 0;
+    text-decoration: none;
+    display: block;
+    text-align: center;
+    border: 1px solid black;
+    margin-top: 13px;
+    &:hover {
+        text-decoration: underline;
+    }
+`;
+
 export const DeleteButton = styled.button`
     cursor: pointer;
     border: none;

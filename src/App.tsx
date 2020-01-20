@@ -85,7 +85,7 @@ const App: React.FC = () => {
 									<Header />
 									<FlexWrapper>
 										<Left>
-											<Route path="/oversigt" component={OverviewPage}></Route>
+											<Route exact path="/" component={OverviewPage}></Route>
 											<Route path="/profil/:id" component={Profile}></Route>
 										</Left>
 										<Right>

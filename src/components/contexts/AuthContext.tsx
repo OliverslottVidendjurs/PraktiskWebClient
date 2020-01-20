@@ -166,7 +166,7 @@ const AuthContextProvider = (props: any) => {
             authenticated
         }}>
             {redirect ? <Redirect to="/login" /> : null}
-            {loggedIn ? <Redirect to="/oversigt" /> : null}
+            {loggedIn ? <Redirect to="/" /> : null}
             {props.children}
         </AuthContext.Provider>
     )
