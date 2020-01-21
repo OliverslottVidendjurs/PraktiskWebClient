@@ -7,6 +7,8 @@ import { gql } from "apollo-boost";
 import { DeleteButton } from "../../styles/styles";
 import { Link } from "react-router-dom";
 import Like from "./Like";
+import { Header, PosterName, RightSideHeader, TimeStamp, ContentWrapper } from "./Post";
+import moment from "moment";
 
 const ComponentWrapper = styled.li`
     border: 1px solid #00000066;
@@ -16,16 +18,6 @@ const ComponentWrapper = styled.li`
     padding: 10px;
     display: flex;
     justify-content: space-between;
-`;
-
-const Name = styled.span`
-    font-size: 20px;
-    margin-bottom: 8px;
-    display: block;
-    a {
-        text-decoration: none;
-        color: black;
-    }
 `;
 
 const Content = styled.p`
@@ -69,12 +61,20 @@ const Comment = ({ comment }: any) => {
 
     return (
         <ComponentWrapper>
-            <div>
-                <Name><Link to={`/profil/${comment.user_id}`}>{`${data.userById.firstname} ${data.userById.lastname}`}</Link></Name>
+            <ContentWrapper>
+                <Header>
+                    <PosterName>
+                        <Link to={`/profil/${comment.user_id}`}>{`${data.userById.firstname} ${data.userById.lastname}`}</Link>
+                    </PosterName>
+                    <RightSideHeader>
+                        <TimeStamp title={moment(parseInt(comment.created)).format()}>{moment(parseInt(comment.created)).fromNow()}</TimeStamp>
+                        {isOwner ? <DeleteButton onClick={() => deleteComment()}>X</DeleteButton> : null}
+                    </RightSideHeader>
+                </Header>
                 <Content>{comment.content}</Content>
-                <Like variables={{commentId: comment.id}}></Like>
-            </div>
-            {isOwner ? <DeleteButton onClick={() => deleteComment()}>X</DeleteButton> : null}
+                <Like variables={{ commentId: comment.id }}></Like>
+            </ContentWrapper>
+
         </ComponentWrapper>
     )
 }

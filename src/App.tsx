@@ -19,6 +19,9 @@ import { getMainDefinition } from "apollo-utilities";
 import { ChatContextProvider } from './components/contexts/ChatContext';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
 import Friends from './components/friends/Friends';
+import moment from "moment";
+import "moment/locale/da";
+moment.locale("da");
 
 console.log(process.env.NODE_ENV);
 

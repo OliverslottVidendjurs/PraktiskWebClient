@@ -80,6 +80,7 @@ export const COMMENTS = gql`
             content
             user_id
             post_id
+            created
         }
     }
 `;

@@ -14,7 +14,7 @@ interface propType {
     post: postType
 }
 
-const ContentWrapper = styled.div`
+export const ContentWrapper = styled.div`
     width: 100%;
 `;
 
@@ -28,14 +28,14 @@ const PostWrapper = styled.li`
     border-radius: 6px;
 `;
 
-const Header = styled.div`
+export const Header = styled.div`
     display: flex;
     justify-content: space-between;
     width: 100%;
     margin-bottom: 20px;
 `;
 
-const PosterName = styled.p`
+export const PosterName = styled.p`
     font-size: 22px;
     a {
         text-decoration: none;
@@ -43,7 +43,7 @@ const PosterName = styled.p`
     }
 `;
 
-const TimeStamp = styled.p`
+export const TimeStamp = styled.p`
     color: #000000a8;
     padding: 5px;
 `;
@@ -63,7 +63,7 @@ const InteractionWrapper = styled.div`
     border-top: 1px solid black;
 `;
 
-const RightSideHeader = styled.div`
+export const RightSideHeader = styled.div`
     display: flex;
 `;
 
@@ -110,7 +110,7 @@ const Post = ({ post }: propType) => {
                 <Header>
                     <PosterName><Link to={`/profil/${post.user_id}`}>{post.user.firstname} {post.user.lastname}</Link></PosterName>
                     <RightSideHeader>
-                        <TimeStamp>{moment(parseInt(post.date)).fromNow() }</TimeStamp>
+                        <TimeStamp title={moment(parseInt(post.date)).format()}>{moment(parseInt(post.date)).fromNow() }</TimeStamp>
                         {DeleteButtonConditional()}
                     </RightSideHeader>
                 </Header>
