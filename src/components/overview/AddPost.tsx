@@ -18,7 +18,7 @@ const TextArea = styled.textarea`
 const Button = styled.button`
     font-size: 24px;
     cursor: pointer;
-    width: 100px;
+    width: 150px;
     height: 50px;
     border: none;
     background-color: #2c3fc7;

@@ -6,22 +6,43 @@ import { useMutation } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import { GETPOSTS, GETFRIENDS } from "../../schema/schema";
 import { IChatContextType, ChatContext } from "../contexts/ChatContext";
+import { ReactComponent as ChatIcon } from "../../gfx/icon-chat.svg";
+import { ReactComponent as RemoveUserIcon } from "../../gfx/icon-user-remove.svg"
 
 
 const FriendContainer = styled.li`
     margin-bottom: 10px;
+    display: flex;
 `;
 
 const RemoveFriendButton = styled.button`
     cursor: pointer;
     padding: 3px;
     margin-left: 5px;
+    background: none;
+    border: none;
+    &:hover {
+        svg {
+            .primary {
+                fill: red;
+            }
+        }
+    }
 `;
 
 const OpenChatButton = styled.button`
     cursor: pointer;
     padding: 3px;
     margin-left: 5px;
+    background: none;
+    border: none;
+    &:hover {
+        svg {
+            .primary {
+                fill: blue;
+            }
+        }
+    }
 `;
 
 interface PropType {
@@ -36,8 +57,31 @@ const REMOVEFRIEND = gql`
 `;
 
 const FriendName = styled.span`
+    align-self: center;
     a {
+        color: black;
+        font-size: 20px;
         text-decoration: none;
+    }
+`;
+
+const ChatIconStyled = styled(ChatIcon)`
+    width: 25px;
+    .primary {
+        fill: #2c3fc7;
+    }
+    .secondary {
+        fill: #ffffff;   
+    }
+`;
+
+const RemoveUserIconStyled = styled(RemoveUserIcon)`
+    width: 25px;
+    .primary {
+        fill: #e65963;
+    }
+    .secondary {
+        fill: #e65963;
     }
 `;
 
@@ -56,15 +100,19 @@ const Friend = ({ friend }: PropType) => {
     }
     return (
         <FriendContainer>
-            <div>
-                <FriendName>
-                    <Link to={`/profil/${friend.id}`}>
-                        {friend.firstname} {friend.lastname}
-                    </Link>
-                </FriendName>
-                <RemoveFriendButton onClick={() => removeFriend(friend.id)}>Fjern ven</RemoveFriendButton>
-                <OpenChatButton onClick={() => chatContext.openChat(friend.id) }>Chat</OpenChatButton>
-            </div>
+            <FriendName>
+                <Link to={`/profil/${friend.id}`}>
+                    {friend.firstname} {friend.lastname}
+                </Link>
+            </FriendName>
+
+            <RemoveFriendButton onClick={() => removeFriend(friend.id)}>
+                <RemoveUserIconStyled />
+            </RemoveFriendButton>
+
+            <OpenChatButton onClick={() => chatContext.openChat(friend.id)}>
+                <ChatIconStyled />
+            </OpenChatButton>
         </FriendContainer>
     )
 }

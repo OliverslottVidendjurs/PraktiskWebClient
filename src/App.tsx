@@ -12,7 +12,6 @@ import styled from 'styled-components';
 import Header from './components/header/Header';
 import { AuthContextProvider, AuthContext } from './components/contexts/AuthContext';
 import Profile from './components/profile/Profile';
-import "../node_modules/@fortawesome/fontawesome-free/css/all.css";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { WebSocketLink } from "apollo-link-ws"
 import { getMainDefinition } from "apollo-utilities";

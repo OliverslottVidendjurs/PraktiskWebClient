@@ -121,6 +121,7 @@ const MobileHeader = styled.div`
 
 const MenuIconStyled = styled(MenuIcon)`
     height: 100%;
+    fill: white;
 `;
 
 const Header = () => {

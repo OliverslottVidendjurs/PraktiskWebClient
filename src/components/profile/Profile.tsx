@@ -7,6 +7,7 @@ import Posts from '../overview/Posts';
 import { useParams } from 'react-router-dom';
 import { USERBYID } from '../../schema/schema';
 import { countryList } from '../../other/other';
+import { ReactComponent as EditIcon } from "../../gfx/icon-edit.svg";
 
 const EditButton = styled.button`
     cursor: pointer;
@@ -15,6 +16,13 @@ const EditButton = styled.button`
     background: none;
     &:focus {
         outline: none;
+    }
+`;
+
+const EditIconStyled = styled(EditIcon)`
+    width: 25px;
+    .primary {
+        fill: #2c3fc7;
     }
 `;
 
@@ -231,7 +239,7 @@ const Profile = () => {
         if (isOwner) {
             return (
                 <EditButton onClick={() => handleClick(elm.id, elm.value)}>
-                    <i className="fas fa-edit"></i>
+                    <EditIconStyled />
                 </EditButton>
             );
         }
