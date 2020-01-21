@@ -19,7 +19,10 @@ const ADDCOMMENT = gql`
 
 
 const CommentInputField = styled.input`
-
+    border: 1px solid #00000066;
+    border-radius: 6px;
+    font-size: 22px;
+    padding: 5px;
 `;
 
 const Comments = ({postId}: any) => {

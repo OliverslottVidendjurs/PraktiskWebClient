@@ -21,6 +21,8 @@ const ChatContainer = styled.div`
     overflow: hidden;
     @media (max-width: 700px){
         right: 0;
+        max-width: 100%;
+        
     }
 `;
 

@@ -27,7 +27,7 @@ const uploadLink = createUploadLink({
 	credentials: "include"
 });
 export let subscriptionClient = new SubscriptionClient(
-	process.env.NODE_ENV === "production" ? "wss://www.oliverslott.com/graphql" : "ws://localhost:5000/graphql" ,
+	process.env.NODE_ENV === "production" ? "wss://www.oliverslott.com/graphql" : "ws://localhost:5000/graphql",
 	{
 		reconnect: true
 	}
@@ -75,7 +75,8 @@ const Right = styled.div`
 	border-left: 1px solid black;
 	background-color: #f9f9f9;
 	@media (max-width: 700px) {
-        margin: 0;
+		/* margin: 0; */
+		display: none;
     }
 `;
 
@@ -92,15 +93,19 @@ const App: React.FC = () => {
 							<Main>
 								<ChatContextProvider>
 									<Header />
-									<FlexWrapper>
-										<Left>
-											<Route exact path="/" component={OverviewPage}></Route>
-											<Route path="/profil/:id" component={Profile}></Route>
-										</Left>
-										<Right>
-											<Friends />
-										</Right>
-									</FlexWrapper>
+									<Switch>
+										<Route path="/venner" component={Friends} ></Route>
+										<FlexWrapper>
+											<Left>
+												<Route exact path="/" component={OverviewPage}></Route>
+												<Route path="/profil/:id" component={Profile}></Route>
+
+											</Left>
+											<Right>
+												<Friends />
+											</Right>
+										</FlexWrapper>
+									</Switch>
 								</ChatContextProvider>
 							</Main>
 						</Switch>

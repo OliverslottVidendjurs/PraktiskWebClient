@@ -8,6 +8,7 @@ import { AuthContext } from "../contexts/AuthContext";
 import Comments from "./Comments";
 import { DeleteButton } from "../../styles/styles";
 import Like from "./Like";
+import moment from "moment";
 
 interface propType {
     post: postType
@@ -109,7 +110,7 @@ const Post = ({ post }: propType) => {
                 <Header>
                     <PosterName><Link to={`/profil/${post.user_id}`}>{post.user.firstname} {post.user.lastname}</Link></PosterName>
                     <RightSideHeader>
-                        <TimeStamp>{new Date(parseInt(post.date)).toLocaleString()}</TimeStamp>
+                        <TimeStamp>{moment(parseInt(post.date)).fromNow() }</TimeStamp>
                         {DeleteButtonConditional()}
                     </RightSideHeader>
                 </Header>

@@ -11,7 +11,9 @@ const Container = styled.div`
     position: sticky;
     top: 0;
     @media (max-width: 700px) {
-        display: none;
+        /* display: none; */
+        padding-top: 65px;
+        position: unset;
     }
 `;
 

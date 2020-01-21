@@ -2,7 +2,7 @@ import React, { useContext, useRef, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { AuthContext, IContextType } from "../contexts/AuthContext";
-import {ReactComponent as MenuIcon} from "../../gfx/icon-menu.svg"
+import { ReactComponent as MenuIcon } from "../../gfx/icon-menu.svg"
 
 const List = styled.ul`
     list-style: none;
@@ -104,6 +104,7 @@ const ComponentWrapper = styled.div`
     width: 100%;
     @media (max-width: 700px) {
         position: fixed;
+        z-index: 1;
     }
 `;
 
@@ -115,9 +116,10 @@ const MobileHeader = styled.div`
         display: block;
     }
     height: 50px;
+    border-bottom: 1px solid #0000001f;
 `;
 
-const MenuIconStyled = styled(MenuIcon) `
+const MenuIconStyled = styled(MenuIcon)`
     height: 100%;
 `;
 
@@ -125,6 +127,7 @@ const Header = () => {
     const authContext = useContext<IContextType>(AuthContext);
     const headerRef = useRef<HTMLHeadElement>(null);
     const [menuShowing, setMenuShowing] = useState<boolean>(false);
+    const [screenWidth, setScreenWidth] = useState<number>(window.screen.width);
 
     useEffect(() => {
         if (menuShowing) {
@@ -134,25 +137,50 @@ const Header = () => {
         }
     }, [menuShowing]);
 
+    const hideMenu = () => {
+        setMenuShowing(false);
+        console.log("click")
+    }
+
     useEffect(() => {
-        const hideMenu = () => {
-            setMenuShowing(false);
+        const SetScreenWidth = () => {
+            setScreenWidth(window.screen.width);
         }
 
-        headerRef.current?.querySelectorAll("a").forEach(element => {
-            element.addEventListener("click", hideMenu);
-        });
+        window.addEventListener("resize", SetScreenWidth);
+        
         window.addEventListener("scroll", hideMenu);
         return () => {
             window.removeEventListener("scroll", hideMenu);
+            window.removeEventListener("resize", SetScreenWidth);
         }
     }, []);
+
+    useEffect(() => {
+        let currentHeaderRef = headerRef.current;
+        currentHeaderRef?.querySelectorAll("a").forEach(element => {
+            element.addEventListener("click", hideMenu);
+        });
+        return () => {
+            currentHeaderRef?.querySelectorAll("a").forEach(element => {
+                element.removeEventListener("click", hideMenu);
+            });
+        }
+    });
+
+    const FriendListItem = () => {
+        if(screenWidth <= 700){
+            return <li><Link to="/venner">Venner</Link></li>
+        } else {
+            return null;
+        }
+    }
 
     return (
         <ComponentWrapper>
             <MobileHeader>
                 <MenuButton onClick={() => setMenuShowing(!menuShowing)}>
-                    <MenuIconStyled/>
+                    <MenuIconStyled />
                 </MenuButton>
             </MobileHeader>
             <HeaderContainer ref={headerRef}>
@@ -167,6 +195,7 @@ const Header = () => {
                                     {`${authContext.State.firstname} ${authContext.State.lastname}`}
                                 </Link>
                             </li>
+                            {FriendListItem()}
                             <li>
                                 <LogoutButton onClick={() => authContext.logout()}>Log ud</LogoutButton>
                             </li>
