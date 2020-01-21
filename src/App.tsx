@@ -77,6 +77,8 @@ const Right = styled.div`
 	margin-left: 10px;
 	border-left: 1px solid black;
 	background-color: #f9f9f9;
+	max-width: 300px;
+    width: 100%;
 	@media (max-width: 700px) {
 		/* margin: 0; */
 		display: none;

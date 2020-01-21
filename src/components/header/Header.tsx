@@ -104,7 +104,7 @@ const ComponentWrapper = styled.div`
     width: 100%;
     @media (max-width: 700px) {
         position: fixed;
-        z-index: 1;
+        z-index: 2;
     }
 `;
 

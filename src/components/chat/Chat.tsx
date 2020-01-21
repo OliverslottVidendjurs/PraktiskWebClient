@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { gql } from "apollo-boost";
 import { useMutation, useQuery, useSubscription } from "@apollo/react-hooks";
 import { IChatContextType, ChatContext } from "../contexts/ChatContext";
+import moment from "moment";
+import { AuthContext } from "../contexts/AuthContext";
 
 const ChatContainer = styled.div`
     position: fixed;
@@ -10,19 +12,19 @@ const ChatContainer = styled.div`
     max-width: 400px;
     height: 400px;
     bottom: 0;
-    right: 320px;
+    right: 305px;
     border: 1px solid #00000066;
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
     background-color: #f9f9f9;
-    z-index: 9999;
+    z-index: 1;
     display: flex;
     flex-direction: column;
     overflow: hidden;
     @media (max-width: 700px){
         right: 0;
         max-width: 100%;
-        
+
     }
 `;
 
@@ -87,6 +89,31 @@ const CloseButton = styled.button`
     cursor: pointer;
 `;
 
+const MessageContainer = styled.div`
+    display: flex;
+    margin-top: 10px;
+    &:not(:last-child){
+        margin-bottom: 15px;
+    }
+`;
+
+const MessageBubble = styled.div`
+    display: inline-block;
+    padding: 6px 18px;
+    background-color: #e0e0e0;
+    border-radius: 17px;
+`;
+
+const TimeStamp = styled.div`
+    font-size: 13px;
+    text-align: center;
+    color: rgb(95, 95, 95);
+`;
+
+const MessageContainer2 = styled.div`
+    max-width: 50%;
+`;
+
 const ADD_MESSAGE = gql`
     mutation addMessage($toId: Int, $content: String) {
         addMessage(toId: $toId, content: $content) 
@@ -96,17 +123,15 @@ const ADD_MESSAGE = gql`
 const MESSAGES = gql`
     query messages($friendId: Int) {
         messages(friendId: $friendId) {
-            id,
+            id
             from_user {
-                firstname,
+                firstname
                 lastname
-            },
-            to_user {
-                firstname,
-                lastname
-            },
-            content,
+            }
+            content
             created
+            from_user_id
+            to_user_id
         }
     }
 `;
@@ -114,17 +139,19 @@ const MESSAGES = gql`
 const MESSAGE_SUBSCRIPTION = gql`
     subscription onMessageAdded {
         messageAdded {
-            id,
+            id
             from_user {
-                firstname,
+                firstname
                 lastname
             },
             to_user {
-                firstname,
+                firstname
                 lastname
-            },
-            content,
+            }
+            content
             created
+            from_user_id
+            to_user_id
         }
     }
 `;
@@ -140,7 +167,8 @@ const GETUSERBYID = gql`
 
 const Chat = () => {
     const chatContext = useContext<IChatContextType>(ChatContext);
-    const {data: userData, loading: userLoading} = useQuery(GETUSERBYID,{
+    const authContext = useContext(AuthContext);
+    const { data: userData, loading: userLoading } = useQuery(GETUSERBYID, {
         variables: {
             id: chatContext.currentlyChattingId
         }
@@ -185,9 +213,17 @@ const Chat = () => {
     });
     const MessagesList = messages.map((message: any) => {
         return (
-            <p key={message.id}><b>{message.from_user.firstname}:</b> {message.content}</p>
+            <MessageContainer key={message.id} style={message.from_user_id === authContext.State.id ? { justifyContent: "flex-end" } : {}}>
+                <MessageContainer2>
+                    <MessageBubble>
+                        <p>{message.content}</p>
+                    </MessageBubble>
+                    <TimeStamp>{moment(parseInt(message.created)).fromNow()}</TimeStamp>
+                </MessageContainer2>
+            </MessageContainer>
         )
     });
+    
 
     if (chatContext.currentlyChattingId === null) return null;
     return (
