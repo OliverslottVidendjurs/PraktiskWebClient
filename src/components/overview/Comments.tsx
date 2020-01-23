@@ -4,6 +4,7 @@ import { useQuery, useMutation } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import Comment from "./Comment";
 import { COMMENTS } from "../../schema/schema";
+import { ICommentData } from "../../types/Comment";
 
 const CommentsListElm = styled.ul`
     list-style: none;
@@ -25,17 +26,22 @@ const CommentInputField = styled.input`
     padding: 5px;
 `;
 
-const Comments = ({postId}: any) => {
+interface IProps {
+    postId: number
+}
+
+const Comments = ({postId}: IProps) => {
     const [addComment] = useMutation(ADDCOMMENT);
     const [commentText, setCommentText] = useState<string>("");
-    const { data: commentsData, loading: commentsLoading } = useQuery(COMMENTS, {
+    const { data: commentsData, loading: commentsLoading } = useQuery<ICommentData>(COMMENTS, {
         variables: {
             postId: postId
         }
     });
-    let CommentsList = [];
-    if (!commentsLoading && commentsData.comments) {
-        CommentsList = commentsData.comments.map((comment: any) => {
+    
+    let CommentsList: JSX.Element[] = [];
+    if (!commentsLoading && commentsData?.comments) {
+        CommentsList = commentsData.comments.map(comment => {
             return (
                 <Comment key={comment.id} comment={comment}></Comment>
             )

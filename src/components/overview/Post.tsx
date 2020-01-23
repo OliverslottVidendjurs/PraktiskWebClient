@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { postType } from "../../types/post";
 import styled from "styled-components";
-import { useMutation } from "@apollo/react-hooks";
+import { useMutation, useQuery } from "@apollo/react-hooks";
 import { DELETEPOST, GETPOSTS, GETPOSTSBYID } from "../../schema/schema";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
@@ -9,6 +9,7 @@ import Comments from "./Comments";
 import { DeleteButton } from "../../styles/styles";
 import Like from "./Like";
 import moment from "moment";
+import { gql } from "apollo-boost";
 
 interface propType {
     post: postType
@@ -21,7 +22,6 @@ export const ContentWrapper = styled.div`
 const PostWrapper = styled.li`
     display: flex;
     justify-content: space-between;
-    /* max-width: 500px; */
     border: 1px solid #00000066;
     margin-bottom: 25px;
     padding: 18px;
@@ -67,10 +67,31 @@ export const RightSideHeader = styled.div`
     display: flex;
 `;
 
+const LIKES = gql`
+    query likes($postId: Int, $commentId: Int) {
+        likes(postId: $postId, commentId: $commentId) {
+            id
+            user_id
+        }
+    }
+`;
+
+const LIKE = gql`
+    mutation like($postId: Int, $commentId: Int){
+        like(postId: $postId, commentId: $commentId)
+    }
+`;
+
 
 const Post = ({ post }: propType) => {
     const [deletePost] = useMutation(DELETEPOST);
     const authContext = useContext(AuthContext);
+    const [like] = useMutation(LIKE);
+    const { data: likesData } = useQuery(LIKES, {
+        variables: {
+            postId: post.id
+        }
+    });
     const handleDeleteClick = () => {
         deletePost({
             variables: {
@@ -85,6 +106,20 @@ const Post = ({ post }: propType) => {
                 }
             }]
         });
+    }
+
+    const handleLikeCallback = () => {
+        like({
+            variables: {
+                postId: post.id
+            },
+            refetchQueries: [{
+                query: LIKES,
+                variables: {
+                    postId: post.id
+                }
+            }]
+        })
     }
 
     const DeleteButtonConditional = () => {
@@ -110,14 +145,14 @@ const Post = ({ post }: propType) => {
                 <Header>
                     <PosterName><Link to={`/profil/${post.user_id}`}>{post.user.firstname} {post.user.lastname}</Link></PosterName>
                     <RightSideHeader>
-                        <TimeStamp title={moment(parseInt(post.date)).format()}>{moment(parseInt(post.date)).fromNow() }</TimeStamp>
+                        <TimeStamp title={moment(parseInt(post.date)).format()}>{moment(parseInt(post.date)).fromNow()}</TimeStamp>
                         {DeleteButtonConditional()}
                     </RightSideHeader>
                 </Header>
                 {ImageConditional()}
                 <Content>{post.content}</Content>
                 <InteractionWrapper>
-                    <Like variables={{ postId: post.id }} />
+                    <Like likes={likesData?.likes ?? []} submitLike={handleLikeCallback} />
                     <Comments postId={post.id}></Comments>
                 </InteractionWrapper>
             </ContentWrapper>

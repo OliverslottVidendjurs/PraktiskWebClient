@@ -6,9 +6,11 @@ import { IContextType, AuthContext } from "../contexts/AuthContext";
 import { gql } from "apollo-boost";
 import { DeleteButton } from "../../styles/styles";
 import { Link } from "react-router-dom";
-import Like from "./Like";
 import { Header, PosterName, RightSideHeader, TimeStamp, ContentWrapper } from "./Post";
 import moment from "moment";
+import Like from "./Like";
+import { ILikeData } from "../../types/Like";
+import { IComment } from "../../types/Comment";
 
 const ComponentWrapper = styled.li`
     border: 1px solid #00000066;
@@ -30,11 +32,36 @@ const DELETECOMMENT = gql`
     }
 `;
 
-const Comment = ({ comment }: any) => {
+const LIKES = gql`
+    query likes($commentId: Int) {
+        likes(commentId: $commentId) {
+            id
+            user_id
+        }
+    }
+`;
+
+const LIKE = gql`
+    mutation like($commentId: Int){
+        like(commentId: $commentId)
+    }
+`;
+
+interface IProps {
+    comment: IComment
+}
+
+const Comment = ({ comment }: IProps) => {
     const [isOwner, setIsOwner] = useState<boolean>(false);
     const { data, loading } = useQuery(USERBYID, {
         variables: {
             id: comment.user_id
+        }
+    });
+    const [like] = useMutation(LIKE);
+    const { data: likesData } = useQuery<ILikeData>(LIKES, {
+        variables: {
+            commentId: comment.id
         }
     });
 
@@ -49,6 +76,20 @@ const Comment = ({ comment }: any) => {
             }
         }]
     });
+
+    const handleLikeCallback = () => {
+        like({
+            variables: {
+                commentId: comment.id
+            },
+            refetchQueries: [{
+                query: LIKES,
+                variables: {
+                    commentId: comment.id
+                }
+            }]
+        })
+    }
     const authContext = useContext<IContextType>(AuthContext);
 
     useEffect(() => {
@@ -72,9 +113,8 @@ const Comment = ({ comment }: any) => {
                     </RightSideHeader>
                 </Header>
                 <Content>{comment.content}</Content>
-                <Like variables={{ commentId: comment.id }}></Like>
+                <Like likes={likesData?.likes ?? []} submitLike={handleLikeCallback}></Like>
             </ContentWrapper>
-
         </ComponentWrapper>
     )
 }
